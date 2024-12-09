@@ -32,6 +32,19 @@ jobs:
                 name: 'Checkout repository'
                 # uses: 'actions/checkout@v4'
                 uses: 'actions/checkout@main'
+
+            -
+                name: 'Connect VPN'
+                id: vpn-connect
+                run: |
+                    sudo vpnc \
+                        --gateway 192.100.176.95 \
+                        --id VPNADTmp \
+                        --secret '${{ secrets.VPN_SECRET }}' \
+                        --username '${{ vars.VPN_USER }}' \
+                        --password '${{ secrets.VPN_PASSWORD }}' \
+                        --dh dh5 \
+                        --pfs dh5;
             -
                 name: 'Azure login'
                 run: docker compose -f compose.yaml run --rm cli az login -u '${{ secrets.AZURE_WEB_APP_CONTAINER_USER }}' -p '${{ secrets.AZURE_WEB_APP_CONTAINER_PASSWORD }}'
@@ -46,6 +59,11 @@ jobs:
             -
                 name: 'Azure logout'
                 run: docker compose -f compose.yaml run --rm cli az logout'
+
+            -
+                  name: 'Disconnect VPN'
+                  if: ${{ (success() || failure()) && steps.vpn-connect.conclusion == 'success' }}
+                  run: sudo vpnc-disconnect
             # -
             #     name: 'Download Docker artifacts'
             #     uses: 'actions/download-artifact@v4'
