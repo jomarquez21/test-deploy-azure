@@ -62,11 +62,13 @@ jobs:
   
             -
                   name: 'Install VPN client'
+                  id: vpn-installation
                   run: sudo apt-get install vpnc
 
             -
                 name: 'Connect VPN'
                 id: vpn-connect
+                if: ${{ 'success' == steps.vpn-installation.conclusion}}
                 run: |
                     sudo vpnc \
                         --gateway 192.100.176.95 \
@@ -83,33 +85,20 @@ jobs:
                     registry: ${{ vars.DOCKER_REGISTRY }}
                     username: ${{ vars.DOCKER_USERNAME }}
                     password: ${{ secrets.DOCKER_PASSWORD }}
+
+            - 
+                name: 'Docker image push'
+                run: |
+                    docker push '${{ vars.DOCKER_TAG }}'
             # -
             #     name: 'Azure logout'
             #     run: docker compose -f compose.yaml run --rm cli az logout'
 
             -
                   name: 'Disconnect VPN'
-                  if: ${{ (success() || failure()) && steps.vpn-connect.conclusion == 'success' }}
+                  if: ${{ (success() || failure()) && 'success' == steps.vpn-connect.conclusion }}
                   run: sudo vpnc-disconnect
 
-            # -
-            #     name: 'Download Docker artifacts'
-            #     uses: 'actions/download-artifact@v4'
-            #     with:
-            #         name: env-docker
-            #         path: .docker/
-            # -
-            #     name: 'Cache Docker images'
-            #     uses: 'ScribeMD/docker-cache@0.5.0'
-            #     with:
-            #         key: '${{ needs.build-php.outputs.cache-key-docker }}'
-            #         read-only: true
-            # -
-            #     name: 'Cache Composer dependencies'
-            #     uses: 'actions/cache@v4'
-            #     with:
-            #         path: vendor/
-            #         key: '${{ needs.build-php.outputs.cache-key-deps }}'
             # -
             #     name: 'Configure Composer authentication for GitHub ...'
             #     if: ${{ env.COMPOSER_GITHUB_TOKEN }}
