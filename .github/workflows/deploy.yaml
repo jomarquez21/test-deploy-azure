@@ -50,7 +50,7 @@ jobs:
 
                     docker image build \
                         --file .Dockerfile \
-                        --build-arg 'INSTALL_DEV_DEPS=${INSTALL_DEV_DEPS}'' \
+                        --build-arg 'INSTALL_DEV_DEPS=${INSTALL_DEV_DEPS}' \
                         --build-arg 'APP_ENV=${APP_ENV}' \
                         --target base \
                         --tag '${{ vars.DOCKER_TAG }}' \
