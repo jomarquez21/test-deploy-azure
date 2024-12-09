@@ -8,8 +8,7 @@ COPY --from=public.ecr.aws/docker/library/composer:2.8.2 /usr/bin/composer /usr/
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
-    libicu-dev \
-    && docker-php-ext-install intl
+    libicu-dev 
 
 # Instala Symfony CLI
 # RUN curl -sS https://get.symfony.com/cli/installer | bash \
