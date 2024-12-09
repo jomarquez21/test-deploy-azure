@@ -23,71 +23,78 @@ jobs:
         #     - build-php
         environment: '${{ inputs.environment }}'
         steps:
-            -
-                name: 'Load environment variables'
-                run: |
-                    echo 'COMPOSE_PROJECT_NAME=${{ needs.build-php.outputs.project-name }}' >> "${GITHUB_ENV}"
-                    echo 'COMPOSE_FILE=${{ needs.build-php.outputs.compose-file }}' >> "${GITHUB_ENV}"
+            # -
+            #     name: 'Load environment variables'
+            #     run: |
+            #         echo 'COMPOSE_PROJECT_NAME=${{ needs.build-php.outputs.project-name }}' >> "${GITHUB_ENV}"
+            #         echo 'COMPOSE_FILE=${{ needs.build-php.outputs.compose-file }}' >> "${GITHUB_ENV}"
             -
                 name: 'Checkout repository'
-                uses: 'actions/checkout@v4'
-            -
-                name: 'Download Docker artifacts'
-                uses: 'actions/download-artifact@v4'
+                # uses: 'actions/checkout@v4'
+                uses: 'actions/checkout@main'
+
+            - 
+                name: 'Login via Azure CLI'
+                uses: azure/login@v1
                 with:
-                    name: env-docker
-                    path: .docker/
-            -
-                name: 'Cache Docker images'
-                uses: 'ScribeMD/docker-cache@0.5.0'
-                with:
-                    key: '${{ needs.build-php.outputs.cache-key-docker }}'
-                    read-only: true
-            -
-                name: 'Cache Composer dependencies'
-                uses: 'actions/cache@v4'
-                with:
-                    path: vendor/
-                    key: '${{ needs.build-php.outputs.cache-key-deps }}'
-            -
-                name: 'Configure Composer authentication for GitHub ...'
-                if: ${{ env.COMPOSER_GITHUB_TOKEN }}
-                run: docker compose run --rm cli composer config github-oauth.github.com '${{ secrets.COMPOSER_GITHUB_TOKEN }}'
-                env:
-                    COMPOSER_GITHUB_TOKEN: '${{ secrets.COMPOSER_GITHUB_TOKEN }}'
-            -
-                name: 'Build Composer dependencies'
-                run: docker compose run --rm cli composer install --prefer-dist --optimize-autoloader --no-interaction
-            -
-                name: 'Create database certificate'
-                run: |
-                    mkdir --parents ./var/mysql
-                    echo '${{ secrets.AZURE_DATABASE_CERTIFICATE }}' > ./var/mysql/client-key.pem;
-                    chmod 0400 ./var/mysql/client-key.pem;
-            -
-                name: 'Install VPN client'
-                run: sudo apt-get install vpnc
-            -
-                name: 'Connect VPN'
-                id: vpn-connect
-                run: |
-                    sudo vpnc \
-                        --gateway '${{ secrets.VPN_IP }}' \
-                        --id VPNADTmp \
-                        --secret '${{ secrets.VPN_SECRET }}' \
-                        --username '${{ vars.VPN_USER }}' \
-                        --password '${{ secrets.VPN_PASSWORD }}' \
-                        --dh dh5 \
-                        --pfs dh5;
-            -
-                name: 'Test database connection'
-                run: docker compose run --rm --env DATABASE_URL cli bin/console doctrine:schema:update --dump-sql --complete -e prod
-                env:
-                    DATABASE_URL: 'mysql://${{ vars.DATABASE_USER }}:${{ secrets.DATABASE_PASSWORD }}@${{ vars.DATABASE_HOST }}:${{ vars.DATABASE_PORT }}/modulo_frio?serverVersion=8.0.32'
-            -
-                name: 'Deploy'
-                run: docker compose run --rm cli az login -u '${{ vars.AZURE_WEB_APP_CONTAINER_USER }}' -p '${{ secrets.AZURE_WEB_APP_CONTAINER_PASSWORD }}'
-            -
-                name: 'Disconnect VPN'
-                if: ${{ (success() || failure()) && steps.vpn-connect.conclusion == 'success' }}
-                run: sudo vpnc-disconnect
+                  creds: ${{ secrets.AZURE_CREDENTIALS }}
+            # -
+            #     name: 'Download Docker artifacts'
+            #     uses: 'actions/download-artifact@v4'
+            #     with:
+            #         name: env-docker
+            #         path: .docker/
+            # -
+            #     name: 'Cache Docker images'
+            #     uses: 'ScribeMD/docker-cache@0.5.0'
+            #     with:
+            #         key: '${{ needs.build-php.outputs.cache-key-docker }}'
+            #         read-only: true
+            # -
+            #     name: 'Cache Composer dependencies'
+            #     uses: 'actions/cache@v4'
+            #     with:
+            #         path: vendor/
+            #         key: '${{ needs.build-php.outputs.cache-key-deps }}'
+            # -
+            #     name: 'Configure Composer authentication for GitHub ...'
+            #     if: ${{ env.COMPOSER_GITHUB_TOKEN }}
+            #     run: docker compose run --rm cli composer config github-oauth.github.com '${{ secrets.COMPOSER_GITHUB_TOKEN }}'
+            #     env:
+            #         COMPOSER_GITHUB_TOKEN: '${{ secrets.COMPOSER_GITHUB_TOKEN }}'
+            # -
+            #     name: 'Build Composer dependencies'
+            #     run: docker compose run --rm cli composer install --prefer-dist --optimize-autoloader --no-interaction
+            # -
+            #     name: 'Create database certificate'
+            #     run: |
+            #         mkdir --parents ./var/mysql
+            #         echo '${{ secrets.AZURE_DATABASE_CERTIFICATE }}' > ./var/mysql/client-key.pem;
+            #         chmod 0400 ./var/mysql/client-key.pem;
+            # -
+            #     name: 'Install VPN client'
+            #     run: sudo apt-get install vpnc
+            # -
+            #     name: 'Connect VPN'
+            #     id: vpn-connect
+            #     run: |
+            #         sudo vpnc \
+            #             --gateway '${{ secrets.VPN_IP }}' \
+            #             --id VPNADTmp \
+            #             --secret '${{ secrets.VPN_SECRET }}' \
+            #             --username '${{ vars.VPN_USER }}' \
+            #             --password '${{ secrets.VPN_PASSWORD }}' \
+            #             --dh dh5 \
+            #             --pfs dh5;
+            # -
+            #     name: 'Test database connection'
+            #     run: docker compose run --rm --env DATABASE_URL cli bin/console doctrine:schema:update --dump-sql --complete -e prod
+            #     env:
+            #         DATABASE_URL: 'mysql://${{ vars.DATABASE_USER }}:${{ secrets.DATABASE_PASSWORD }}@${{ vars.DATABASE_HOST }}:${{ vars.DATABASE_PORT }}/modulo_frio?serverVersion=8.0.32'
+            # -
+            #     name: 'Deploy'
+            #     run: docker compose run --rm cli az login -u '${{ vars.AZURE_WEB_APP_CONTAINER_USER }}' -p '${{ secrets.AZURE_WEB_APP_CONTAINER_PASSWORD }}'
+            # -
+            #     name: 'Disconnect VPN'
+            #     if: ${{ (success() || failure()) && steps.vpn-connect.conclusion == 'success' }}
+            #     run: sudo vpnc-disconnect
