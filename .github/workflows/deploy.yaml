@@ -32,12 +32,9 @@ jobs:
                 name: 'Checkout repository'
                 # uses: 'actions/checkout@v4'
                 uses: 'actions/checkout@main'
-
-            - 
-                name: 'Login via Azure CLI'
-                uses: azure/login@v1
-                with:
-                  creds: ${{ secrets.AZURE_CREDENTIALS }}
+            -
+                name: 'Deploy'
+                run: docker compose -f compose.yaml run --rm cli az login -u '${{ secrets.AZURE_WEB_APP_CONTAINER_USER }}' -p '${{ secrets.AZURE_WEB_APP_CONTAINER_PASSWORD }}'
             # -
             #     name: 'Download Docker artifacts'
             #     uses: 'actions/download-artifact@v4'
@@ -91,9 +88,6 @@ jobs:
             #     run: docker compose run --rm --env DATABASE_URL cli bin/console doctrine:schema:update --dump-sql --complete -e prod
             #     env:
             #         DATABASE_URL: 'mysql://${{ vars.DATABASE_USER }}:${{ secrets.DATABASE_PASSWORD }}@${{ vars.DATABASE_HOST }}:${{ vars.DATABASE_PORT }}/modulo_frio?serverVersion=8.0.32'
-            # -
-            #     name: 'Deploy'
-            #     run: docker compose run --rm cli az login -u '${{ vars.AZURE_WEB_APP_CONTAINER_USER }}' -p '${{ secrets.AZURE_WEB_APP_CONTAINER_PASSWORD }}'
             # -
             #     name: 'Disconnect VPN'
             #     if: ${{ (success() || failure()) && steps.vpn-connect.conclusion == 'success' }}
