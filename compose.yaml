@@ -1,0 +1,25 @@
+services:
+    cli:
+        build:
+            context: ./
+            dockerfile: ./Dockerfile
+        volumes:
+            - ./:/var/www/html/ndd
+            - /tmp:/tmp
+            - ~/.ssh/known_hosts:/root/.ssh/known_hosts:ro
+            - /var/run/docker.sock:/var/run/docker.sock:ro
+            - ${SSH_AUTH_SOCK}:${SSH_AUTH_SOCK}:ro
+        working_dir: /var/www/html/ndd
+        tty: true
+        stdin_open: true
+        init: true
+        networks:
+            - app-network
+        deploy:
+            replicas: 0
+        env_file:
+            - ./.env
+
+networks:
+    app-network:
+        driver: bridge
