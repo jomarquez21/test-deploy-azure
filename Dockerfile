@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM public.ecr.aws/docker/library/php:8.3.7-apache-bookworm
+FROM public.ecr.aws/docker/library/php:8.3.7-apache-bookworm as base
 
 COPY --from=public.ecr.aws/docker/library/composer:2.8.2 /usr/bin/composer /usr/bin/composer
 

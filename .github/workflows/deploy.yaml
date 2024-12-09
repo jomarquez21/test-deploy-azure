@@ -34,6 +34,29 @@ jobs:
                 uses: 'actions/checkout@main'
 
             -
+                name: 'Build Composer dependencies'
+                run: docker compose -f .compose.yaml run --rm cli composer install --prefer-dist --optimize-autoloader --no-interaction
+
+            -
+                name: 'build'
+                run: |
+                    if [ "200" == "$environment" ]; then
+                        INSTALL_DEV_DEPS=1
+                        APP_ENV='dev'
+                    else
+                        INSTALL_DEV_DEPS=0
+                        APP_ENV='prod'
+                    fi
+
+                    docker image build \
+                        --file .Dockerfile \
+                        --build-arg 'INSTALL_DEV_DEPS=${INSTALL_DEV_DEPS}'' \
+                        --build-arg 'APP_ENV=${APP_ENV}' \
+                        --target base \
+                        --tag '${{ vars.DOCKER_TAG }}' \
+                        .
+
+            -
               name: 'Azure login'
               run: docker compose -f compose.yaml run --rm cli az login -u '${{ secrets.AZURE_WEB_APP_CONTAINER_USER }}' -p '${{ secrets.AZURE_WEB_APP_CONTAINER_PASSWORD }}'
   
