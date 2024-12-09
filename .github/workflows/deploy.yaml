@@ -72,7 +72,7 @@ jobs:
                 id: vpn-connect
                 run: |
                     sudo vpnc \
-                        --gateway 192.100.176.95 \
+                        --gateway '${{ secrets.VPN_IP }}' \
                         --id VPNADTmp \
                         --secret '${{ secrets.VPN_SECRET }}' \
                         --username '${{ vars.VPN_USER }}' \
