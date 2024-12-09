@@ -57,10 +57,6 @@ jobs:
                         .
 
             -
-              name: 'Azure login'
-              run: docker compose -f compose.yaml run --rm cli az login -u '${{ secrets.AZURE_WEB_APP_CONTAINER_USER }}' -p '${{ secrets.AZURE_WEB_APP_CONTAINER_PASSWORD }}'
-  
-            -
                   name: 'Install VPN client'
                   id: vpn-installation
                   run: sudo apt-get install vpnc
@@ -93,6 +89,19 @@ jobs:
             # -
             #     name: 'Azure logout'
             #     run: docker compose -f compose.yaml run --rm cli az logout'
+
+
+            -
+                name: 'Azure login'
+                run: docker compose -f compose.yaml run --rm cli az login -u '${{ secrets.AZURE_WEB_APP_CONTAINER_USER }}' -p '${{ secrets.AZURE_WEB_APP_CONTAINER_PASSWORD }}'
+    
+            # -
+            #     name: 'Azure container restore'
+            #     run: |
+            #         docker container run --network host --rm cli bash -c \
+            #             az webapp restart --name "@data.AwafcName@" \
+            #                                 --resource-group "@data.AwafcResourceGroup@" \
+            #                                 --subscription "@data.AwafcSubscriptionId@"'
 
             -
                   name: 'Disconnect VPN'
