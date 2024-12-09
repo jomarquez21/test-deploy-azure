@@ -35,7 +35,7 @@ jobs:
 
             -
                 name: 'Build Composer dependencies'
-                run: docker compose -f .compose.yaml run --rm cli composer install --prefer-dist --optimize-autoloader --no-interaction
+                run: docker compose -f ./compose.yaml run --rm cli composer install --prefer-dist --optimize-autoloader --no-interaction
 
             -
                 name: 'build'
@@ -49,7 +49,7 @@ jobs:
                     fi
 
                     docker image build \
-                        --file .Dockerfile \
+                        --file ./Dockerfile \
                         --build-arg 'INSTALL_DEV_DEPS=${INSTALL_DEV_DEPS}' \
                         --build-arg 'APP_ENV=${APP_ENV}' \
                         --target base \
