@@ -83,18 +83,18 @@ jobs:
             #         username: ${{ vars.DOCKER_USERNAME }}
             #         password: ${{ secrets.DOCKER_PASSWORD }}
             #     uses: docker/login-action@v3
-            - 
-                name: Log in to ACR
-                uses: azure/docker-login@v1
-                with:
-                    login-server: ${{ vars.DOCKER_REGISTRY }}
-                    username: ${{ vars.DOCKER_USERNAME }}
-                    password: ${{ secrets.DOCKER_PASSWORD }}
+            # - 
+            #     name: Log in to ACR
+            #     uses: azure/docker-login@v1
+            #     with:
+            #         login-server: ${{ vars.DOCKER_REGISTRY }}
+            #         username: ${{ vars.DOCKER_USERNAME }}
+            #         password: ${{ secrets.DOCKER_PASSWORD }}
 
-            - 
-                name: 'Docker image push'
-                run: |
-                    docker push '${{ vars.DOCKER_TAG }}'
+            # - 
+            #     name: 'Docker image push'
+            #     run: |
+            #         docker push '${{ vars.DOCKER_TAG }}'
             # -
             #     name: 'Azure logout'
             #     run: docker compose -f compose.yaml run --rm cli az logout'
@@ -108,10 +108,11 @@ jobs:
                 name: 'Azure container restore'
                 run: |
                     docker compose -f compose.yaml run --rm cli \
-                        az login -u '${{ secrets.AZURE_WEB_APP_CONTAINER_USER }}' -p '${{ secrets.AZURE_WEB_APP_CONTAINER_PASSWORD }}' && \
-                        az webapp restart --name '${{ vars.AZURE_WEB_APP_CONTAINERS_NAME }}' \
-                                            --resource-group '${{ secrets.AZURE_WEB_APP_CONTAINERS_RESOURCE_GROUP }}' \
-                                            --subscription '${{ secrets.AZURE_WEB_APP_CONTAINERS_SUBSCRIPTION_ID }}'
+                        az login -u '${{ secrets.AZURE_WEB_APP_CONTAINER_USER }}' -p '${{ secrets.AZURE_WEB_APP_CONTAINER_PASSWORD }}' 
+            # && \
+            # az webapp restart --name '${{ vars.AZURE_WEB_APP_CONTAINERS_NAME }}' \
+            #                     --resource-group '${{ secrets.AZURE_WEB_APP_CONTAINERS_RESOURCE_GROUP }}' \
+            #                     --subscription '${{ secrets.AZURE_WEB_APP_CONTAINERS_SUBSCRIPTION_ID }}'
 
             -
                   name: 'Disconnect VPN'
