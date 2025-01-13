@@ -110,9 +110,7 @@ jobs:
                 if: ${{ (success() || failure()) && 'success' == steps.vpn-connect.conclusion }}
                 run: |
                     docker compose -f compose.yaml run --rm cli \
-                        az login \
-                            -u '${{ secrets.AZURE_WEB_APP_CONTAINER_USER }}' \ 
-                            -p '${{ secrets.AZURE_WEB_APP_CONTAINER_PASSWORD }}'
+                        az login -u '${{ secrets.AZURE_WEB_APP_CONTAINER_USER }}' -p '${{ secrets.AZURE_WEB_APP_CONTAINER_PASSWORD }}'
             # && \
             # az webapp restart \
             #     --name '${{ vars.AZURE_WEB_APP_CONTAINERS_NAME }}' \
