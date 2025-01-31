@@ -116,8 +116,7 @@ jobs:
                         az webapp restart \
                             --name '${{ vars.AZURE_WEB_APP_CONTAINERS_NAME }}' \
                             --resource-group '${{ secrets.AZURE_WEB_APP_CONTAINERS_RESOURCE_GROUP }}' \
-                            --subscription '${{ secrets.AZURE_WEB_APP_CONTAINERS_SUBSCRIPTION_ID }}' \
-                        && return 0 \
+                            --subscription '${{ secrets.AZURE_WEB_APP_CONTAINERS_SUBSCRIPTION_ID }}'
                     "
 
             -
