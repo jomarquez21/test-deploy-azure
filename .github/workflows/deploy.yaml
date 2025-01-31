@@ -108,22 +108,18 @@ jobs:
                 name: 'Azure container restore'
                 id: azure-container-restore
                 if: ${{ 'success' == steps.vpn-connect.conclusion }}
-                # run: |
-                #     docker compose -f compose.yaml run --rm cli \
-                #         az login -u '${{ secrets.AZURE_WEB_APP_CONTAINER_USER }}' -p '${{ secrets.AZURE_WEB_APP_CONTAINER_PASSWORD }}' \
-                #         && \
-                #         az webapp restart \
-                #             --name '${{ vars.AZURE_WEB_APP_CONTAINERS_NAME }}' \
-                #             --resource-group '${{ secrets.AZURE_WEB_APP_CONTAINERS_RESOURCE_GROUP }}' \
-                #             --subscription '${{ secrets.AZURE_WEB_APP_CONTAINERS_SUBSCRIPTION_ID }}'
                 run: |
-                    docker compose -f compose.yaml run --rm cli \
-                        az login -u '${{ secrets.AZURE_WEB_APP_CONTAINER_USER }}' -p '${{ secrets.AZURE_WEB_APP_CONTAINER_PASSWORD }}' \
+                    docker container run --network host --rm cli bash -c "\
+                    docker compose -f compose.yaml run --rm cli bash -c \
+                        az login -u '${{ secrets.AZURE_WEB_APP_CONTAINER_USER }}' \
+                            -p '${{ secrets.AZURE_WEB_APP_CONTAINER_PASSWORD }}' \
                         && \
                         az webapp restart \
                             --name '${{ vars.AZURE_WEB_APP_CONTAINERS_NAME }}' \
                             --resource-group '${{ secrets.AZURE_WEB_APP_CONTAINERS_RESOURCE_GROUP }}' \
-                            --subscription '${{ secrets.AZURE_WEB_APP_CONTAINERS_SUBSCRIPTION_ID }}'
+                            --subscription '${{ secrets.AZURE_WEB_APP_CONTAINERS_SUBSCRIPTION_ID }}' \
+                        && return 0 \
+                    "
 
             -
                   name: 'Disconnect VPN'
