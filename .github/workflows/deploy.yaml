@@ -109,8 +109,7 @@ jobs:
                 id: azure-container-restore
                 if: ${{ 'success' == steps.vpn-connect.conclusion }}
                 run: |
-                    docker container run --network host --rm cli bash -c "\
-                    docker compose -f compose.yaml run --rm cli bash -c \
+                    docker compose -f compose.yaml run --rm cli bash -c "\
                         az login -u '${{ secrets.AZURE_WEB_APP_CONTAINER_USER }}' \
                             -p '${{ secrets.AZURE_WEB_APP_CONTAINER_PASSWORD }}' \
                         && \
