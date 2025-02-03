@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity repository-class="App\Repository\DistributionRepository" name="App\Entity\Distribution" table="distribution">
+        <id name="id" type="integer" column="id">
+            <generator strategy="IDENTITY"/>
+        </id>
+        <many-to-one field="classificationGroup" target-entity="App\Entity\ClassificationGroup">
+            <join-column name="classification_group_id" referenced-column-name="id" nullable="false"/>
+        </many-to-one>
+        <many-to-many field="distributionProducts" target-entity="DistributionProduct">
+            <cascade>
+                <cascade-persist/>
+                <cascade-remove/>
+            </cascade>
+            <join-table name="distribution_distribution_products">
+                <join-columns>
+                    <join-column name="distribution_id" referenced-column-name="id"/>
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="distribution_product_id" referenced-column-name="id" unique="true" on-delete="CASCADE"/>
+                </inverse-join-columns>
+            </join-table>
+        </many-to-many>
+        <many-to-one field="concessionary" target-entity="App\Entity\Concessionary"/>
+        <one-to-one field="promissoryNote" target-entity="App\Entity\PromissoryNote">
+            <join-column name="promissory_note_id" referenced-column-name="id" nullable="true"/>
+        </one-to-one>
+        <one-to-one field="invoice" target-entity="App\Entity\Invoice">
+            <join-column name="invoice_id" referenced-column-name="id" nullable="true"/>
+        </one-to-one>
+        <many-to-one field="targetDistribution" target-entity="App\Entity\Distribution">
+            <join-column name="target_distribution_id" referenced-column-name="id" nullable="true"/>
+        </many-to-one>
+        <many-to-one field="baseTargetDistribution" target-entity="App\Entity\Distribution"/>
+        <many-to-one field="salesCenter" target-entity="App\Entity\SalesCenter" inversed-by="concessionaires">
+            <join-column name="sales_center_id" referenced-column-name="id" nullable="false"/>
+        </many-to-one>
+        <field name="totalQuantityAuction" type="integer" column="total_quantity_auction"/>
+        <field name="totalQuantityConcessionary" type="integer" column="total_quantity_concessionary"/>
+        <field name="totalQuantity" type="integer" column="total_quantity"/>
+        <field name="totalAmountAuction" type="float" column="total_amount_auction"/>
+        <field name="totalAmountConcessionary" type="float" column="total_amount_concessionary"/>
+        <field name="totalAmount" type="float" column="total_amount"/>
+        <field name="status" type="string" column="status" nullable="false" enum-type="App\Entity\Enum\DistributionStatus" column-definition="ENUM('billing-pending', 'billing-success', 'billing-failure', 'delivering', 'delivery-success', 'delivery-failure', 'distributing', 'distribution-success', 'distribution-failure', 'reassigning', 'reassignment-success', 'reassignment-failure', 'sweeping','sweep-success', 'sweep-failure')"/>
+        <field name="operationReference" type="string" column="operation_reference" nullable="false"/>
+        <field name="createdAt" type="datetime_immutable" column="created_at" nullable="true"/>
+        <field name="updatedAt" type="datetime_immutable" column="updated_at" nullable="true"/>
+        <field name="sweptAt" type="datetime_immutable" column="swept_at" nullable="true"/>
+        <field name="deliveredAt" type="datetime_immutable" column="delivered_at" nullable="true"/>
+        <field name="type" type="string" column="type" enum-type="App\Entity\Enum\DistributionType" column-definition="ENUM('complementary', 'normal')" nullable="false"/>
+        <lifecycle-callbacks>
+            <lifecycle-callback type="prePersist" method="setCreatedAt"/>
+            <lifecycle-callback type="preUpdate" method="setUpdatedAt"/>
+        </lifecycle-callbacks>
+    </entity>
+</doctrine-mapping>

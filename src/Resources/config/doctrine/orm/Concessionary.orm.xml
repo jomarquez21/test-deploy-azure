@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity repository-class="App\Repository\ConcessionaryRepository" name="App\Entity\Concessionary" table="concessionary">
+        <id name="id" type="integer" column="id">
+            <generator strategy="IDENTITY"/>
+        </id>
+        <field name="name" type="string" column="name"/>
+        <many-to-one field="client" target-entity="App\Entity\Client">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+            <join-column name="client_id" referenced-column-name="id" nullable="false"/>
+        </many-to-one>
+        <many-to-one field="salesCenter" target-entity="App\Entity\SalesCenter" inversed-by="concessionaires">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+            <join-column name="sales_center_id" referenced-column-name="id" nullable="false"/>
+        </many-to-one>
+        <many-to-one field="bank" target-entity="App\Entity\Bank">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+            <join-column name="bank_id" referenced-column-name="id" nullable="false"/>
+        </many-to-one>
+        <unique-constraints>
+            <unique-constraint columns="sales_center_id,client_id,name" name="unique_sales_center_client_name_idx"/>
+        </unique-constraints>
+        <one-to-one field="citizen" target-entity="App\Entity\AbstractCitizen" inversed-by="concessionary">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+            <join-column name="citizen_id" referenced-column-name="id"/>
+        </one-to-one>
+        <field name="isUncollectible" type="boolean" column="is_uncollectible"/>
+        <field name="isActive" type="boolean" column="is_active"/>
+        <field name="operationDate" type="date_immutable" column="operation_date"/>
+        <field name="bankReference" type="string" column="bank_reference"/>
+        <field name="accountNumber" type="string" column="account_number"/>
+        <field name="agreement" type="string" column="agreement"/>
+        <field name="taxDocument" type="string" column="tax_document"/>
+        <field name="createdAt" type="datetime_immutable" column="created_at" nullable="true"/>
+        <field name="updatedAt" type="datetime_immutable" column="updated_at" nullable="true"/>
+        <lifecycle-callbacks>
+            <lifecycle-callback type="prePersist" method="setCreatedAt"/>
+            <lifecycle-callback type="preUpdate" method="setUpdatedAt"/>
+        </lifecycle-callbacks>
+    </entity>
+</doctrine-mapping>

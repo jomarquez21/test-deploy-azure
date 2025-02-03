@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity repository-class="App\Repository\InvoiceJournalEntryRepository" name="App\Entity\InvoiceJournalEntry">
+        <field name="linesNumber" type="integer" column="lines_number"/>
+        <field name="invoiceFolio" type="string" column="invoice_folio"/>
+        <field name="signedAtReference" type="string" column="signed_at_reference"/>
+        <field name="creditDays" type="string" column="credit_days"/>
+        <field name="productInternalCode" type="string" column="product_internal_code"/>
+        <field name="productSoldQuantity" type="string" column="product_sold_quantity"/>
+        <field name="productSoldPrice" type="string" column="product_sold_price"/>
+        <field name="productSoldCost" type="string" column="product_sold_cost"/>
+        <field name="productSoldPriceDifference" type="string" column="product_sold_price_difference"/>
+        <field name="taxAmount" type="string" column="tax_amount"/>
+        <field name="discountAmount" type="string" column="discount_amount"/>
+        <field name="promotionAmount" type="string" column="promotion_Amount"/>
+        <field name="confidentialDiscountAmount" type="string" column="confidential_discount_amount"/>
+        <field name="productSoldAmount" type="string" column="product_sold_amount"/>
+        <field name="productDescription" type="string" column="product_description"/>
+        <field name="productCategory" type="string" column="product_category"/>
+        <field name="clientPartyNumber" type="string" column="client_party_number"/>
+        <field name="clientName" type="string" column="client_name"/>
+        <field name="taxCode" type="string" column="tax_code"/>
+        <field name="taxPercentage" type="string" column="tax_percentage"/>
+        <field name="paymentType" type="string" column="payment_type"/>
+        <field name="invoiceUuid" type="string" column="invoice_uuid"/>
+    </entity>
+</doctrine-mapping>

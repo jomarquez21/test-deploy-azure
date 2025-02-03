@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This entity does not follow our conventions because it is a mapping from an external application. -->
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity repository-class="App\Repository\Interfactura\ImpuestoRepository" name="App\Entity\Interfactura\Impuesto" table="interfactura_impuesto">
+        <id name="id" type="integer" column="id">
+            <generator strategy="IDENTITY"/>
+        </id>
+        <field name="totalImpuestosRetenidos" type="string" column="total_impuestos_retenidos"/>
+        <field name="totalImpuestosTrasladados" type="string" column="total_impuestos_trasladados"/>
+        <field name="retenciones" type="array" column="retenciones"/>
+        <many-to-many field="traslados" target-entity="App\Entity\Interfactura\ImpuestoTraslado">
+            <join-table name="interfactura_impuesto_impuesto_traslados">
+                <join-columns>
+                    <join-column name="impuesto_id" referenced-column-name="id"/>
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="impuesto_traslado_id" referenced-column-name="id"/>
+                </inverse-join-columns>
+            </join-table>
+        </many-to-many>
+        <field name="createdAt" type="datetime_immutable" column="created_at" nullable="true"/>
+        <field name="updatedAt" type="datetime_immutable" column="updated_at" nullable="true"/>
+        <lifecycle-callbacks>
+            <lifecycle-callback type="prePersist" method="setCreatedAt"/>
+            <lifecycle-callback type="preUpdate" method="setUpdatedAt"/>
+        </lifecycle-callbacks>
+    </entity>
+</doctrine-mapping>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This entity does not follow our conventions because it is a mapping from an external application. -->
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity repository-class="App\Repository\Interfactura\SucursalRepository" name="App\Entity\Interfactura\Sucursal" table="interfactura_sucursal">
+        <id name="id" type="integer" column="id">
+            <generator strategy="IDENTITY"/>
+        </id>
+        <field name="calle" type="string" column="calle"/>
+        <field name="codigoPostal" type="string" column="codigo_postal"/>
+        <field name="colonia" type="string" column="colonia"/>
+        <field name="estado" type="string" column="estado"/>
+        <field name="localidad" type="string" column="localidad"/>
+        <field name="municipio" type="string" column="municipio"/>
+        <field name="noExterior" type="string" column="no_exterior"/>
+        <field name="noInterior" type="string" column="no_interior"/>
+        <field name="pais" type="string" column="pais"/>
+        <field name="referencia" type="string" column="referencia"/>
+        <field name="telefono" type="string" column="telefono"/>
+        <field name="createdAt" type="datetime_immutable" column="created_at" nullable="true"/>
+        <field name="updatedAt" type="datetime_immutable" column="updated_at" nullable="true"/>
+        <lifecycle-callbacks>
+            <lifecycle-callback type="prePersist" method="setCreatedAt"/>
+            <lifecycle-callback type="preUpdate" method="setUpdatedAt"/>
+        </lifecycle-callbacks>
+    </entity>
+</doctrine-mapping>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity repository-class="App\Repository\InvoiceItemRepository" name="App\Entity\InvoiceItem" table="invoice_item">
+        <id name="id" type="integer" column="id">
+            <generator strategy="IDENTITY"/>
+        </id>
+        <many-to-one field="product" target-entity="App\Entity\Product">
+            <join-column name="product_id" referenced-column-name="id" nullable="false"/>
+        </many-to-one>
+        <many-to-many field="taxes" target-entity="App\Entity\Tax">
+            <join-table name="invoice_item_taxes">
+                <join-columns>
+                    <join-column name="invoice_item_id" referenced-column-name="id"/>
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="tax_id" referenced-column-name="id"/>
+                </inverse-join-columns>
+            </join-table>
+        </many-to-many>
+        <many-to-one field="invoice" target-entity="App\Entity\Invoice" inversed-by="invoiceItems">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+            <join-column name="invoice_id" referenced-column-name="id" nullable="false"/>
+        </many-to-one>
+        <field name="price" type="float" column="amount"/>
+        <field name="quantity" type="integer" column="quantity"/>
+        <field name="description" type="string" column="description"/>
+        <field name="createdAt" type="datetime_immutable" column="created_at" nullable="true"/>
+        <field name="updatedAt" type="datetime_immutable" column="updated_at" nullable="true"/>
+        <lifecycle-callbacks>
+            <lifecycle-callback type="prePersist" method="setCreatedAt"/>
+            <lifecycle-callback type="preUpdate" method="setUpdatedAt"/>
+        </lifecycle-callbacks>
+    </entity>
+</doctrine-mapping>

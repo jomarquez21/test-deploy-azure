@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity repository-class="App\Repository\PromissoryNoteRepository" name="App\Entity\PromissoryNote" table="promissory_note">
+        <id name="id" type="integer" column="id">
+            <generator strategy="IDENTITY"/>
+        </id>
+        <many-to-one field="client" target-entity="App\Entity\Client">
+            <join-column name="client_id" referenced-column-name="id" nullable="false"/>
+        </many-to-one>
+        <many-to-one field="concessionary" target-entity="App\Entity\Concessionary">
+            <join-column name="concessionary_id" referenced-column-name="id" nullable="false"/>
+        </many-to-one>
+        <many-to-one field="salesCenter" target-entity="App\Entity\SalesCenter">
+            <join-column name="sales_center_id" referenced-column-name="id" nullable="false"/>
+        </many-to-one>
+        <field name="status" type="string" column="status" enum-type="App\Entity\Enum\PromissoryNoteStatus" column-definition="ENUM('uncollectible', 'current', 'paid')"/>
+        <many-to-one field="paymentRegistry" target-entity="App\Entity\PaymentRegistry" inversed-by="promissoryNotes">
+            <join-columns>
+                <join-column name="payment_registry_id" referenced-column-name="id" nullable="true"/>
+            </join-columns>
+        </many-to-one>
+        <field name="amount" type="float" column="amount"/>
+        <field name="distributionTotalAmount" type="float" column="distribution_total_amount"/>
+        <field name="dueAt" type="datetime_immutable" column="due_at"/>
+        <many-to-one field="targetPromissoryNote" target-entity="App\Entity\PromissoryNote"/>
+        <field name="createdAt" type="datetime_immutable" column="created_at" nullable="true"/>
+        <field name="updatedAt" type="datetime_immutable" column="updated_at" nullable="true"/>
+        <lifecycle-callbacks>
+            <lifecycle-callback type="prePersist" method="setCreatedAt"/>
+            <lifecycle-callback type="preUpdate" method="setUpdatedAt"/>
+        </lifecycle-callbacks>
+    </entity>
+</doctrine-mapping>

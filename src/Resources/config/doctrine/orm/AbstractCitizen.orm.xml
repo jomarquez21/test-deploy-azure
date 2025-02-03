@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:gedmo="http://gediminasm.org/schemas/orm/doctrine-extensions-mapping" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="App\Entity\AbstractCitizen" repository-class="App\Repository\CitizenRepository" inheritance-type="SINGLE_TABLE" table="citizen">
+        <discriminator-column name="type" type="string" length="255"/>
+        <discriminator-map>
+            <discriminator-mapping value="citizenMx" class="App\Entity\CitizenMx"/>
+        </discriminator-map>
+        <id name="id" type="integer" column="id">
+            <generator strategy="IDENTITY"/>
+        </id>
+        <field name="fullname" type="string" column="fullname"/>
+        <field name="birthdate" type="date_immutable" column="birthdate"/>
+        <field name="gender" type="string" column="gender" enum-type="App\Entity\Enum\Gender" column-definition="ENUM('female', 'male')"/>
+        <many-to-one field="state" target-entity="App\Entity\State">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+            <join-column name="state_id" referenced-column-name="id" nullable="false"/>
+        </many-to-one>
+        <many-to-one field="colony" target-entity="App\Entity\Colony">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+            <join-column name="colony_id" referenced-column-name="id" nullable="false"/>
+        </many-to-one>
+        <many-to-one field="municipality" target-entity="App\Entity\Municipality">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+            <join-column name="municipality_id" referenced-column-name="id" nullable="false"/>
+        </many-to-one>
+        <many-to-one field="country" target-entity="App\Entity\Country">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+            <join-column name="country_id" referenced-column-name="id" nullable="false"/>
+        </many-to-one>
+        <field name="createdAt" type="datetime_immutable" column="created_at" nullable="true"/>
+        <field name="updatedAt" type="datetime_immutable" column="updated_at" nullable="true"/>
+        <one-to-one field="concessionary" mapped-by="citizen" target-entity="App\Entity\Concessionary"/>
+        <lifecycle-callbacks>
+            <lifecycle-callback type="prePersist" method="setCreatedAt"/>
+            <lifecycle-callback type="preUpdate" method="setUpdatedAt"/>
+        </lifecycle-callbacks>
+    </entity>
+</doctrine-mapping>

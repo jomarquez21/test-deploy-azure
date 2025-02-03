@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity repository-class="App\Repository\ParticipationRepository" name="App\Entity\Participation" table="participation">
+        <id name="id" type="integer" column="id">
+            <generator strategy="IDENTITY"/>
+        </id>
+        <one-to-one field="salesCenter" target-entity="App\Entity\SalesCenter">
+            <join-column name="sales_center_id" referenced-column-name="id" nullable="false"/>
+        </one-to-one>
+        <!-- We define `Participation::$concessionaryCategoryGroups` as a one-to-many unidirectional -->
+        <many-to-many field="concessionaryCategoryGroups" target-entity="App\Entity\ConcessionaryCategoryGroup">
+            <cascade>
+                <cascade-all/>
+            </cascade>
+            <join-table name="participations_concessionary_category_groups">
+                <join-columns>
+                    <join-column name="participation_id" referenced-column-name="id"/>
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="concessionary_category_group_id" referenced-column-name="id" unique="true" on-delete="CASCADE"/>
+                </inverse-join-columns>
+            </join-table>
+        </many-to-many>
+        <field name="reason" type="string" length="255" column="reason"/>
+        <field name="createdAt" type="datetime_immutable" column="created_at" nullable="true"/>
+        <field name="updatedAt" type="datetime_immutable" column="updated_at" nullable="true"/>
+        <lifecycle-callbacks>
+            <lifecycle-callback type="prePersist" method="setCreatedAt"/>
+            <lifecycle-callback type="preUpdate" method="setUpdatedAt"/>
+        </lifecycle-callbacks>
+    </entity>
+</doctrine-mapping>

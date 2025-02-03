@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity repository-class="App\Repository\ProductPriceRepository" name="App\Entity\ProductPrice" table="product_price">
+        <id name="id" type="integer" column="id">
+            <generator strategy="IDENTITY"/>
+        </id>
+        <unique-constraints>
+            <unique-constraint columns="price_list_id,product_id"/>
+        </unique-constraints>
+        <field name="price" type="float" column="price"/>
+        <many-to-one field="priceList" target-entity="PriceList" inversed-by="productPrices">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+            <join-column name="price_list_id" referenced-column-name="id"/>
+        </many-to-one>
+        <many-to-one field="product" target-entity="Product" inversed-by="prices">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+            <join-column name="product_id" referenced-column-name="id"/>
+        </many-to-one>
+        <field name="createdAt" type="datetime_immutable" column="created_at" nullable="true"/>
+        <field name="updatedAt" type="datetime_immutable" column="updated_at" nullable="true"/>
+        <lifecycle-callbacks>
+            <lifecycle-callback type="prePersist" method="setCreatedAt"/>
+            <lifecycle-callback type="preUpdate" method="setUpdatedAt"/>
+        </lifecycle-callbacks>
+    </entity>
+</doctrine-mapping>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity repository-class="App\Repository\SalesCenterRepository" name="App\Entity\SalesCenter" table="sales_center">
+        <id name="id" type="integer" column="id">
+            <generator strategy="IDENTITY"/>
+        </id>
+        <field name="name" type="string" column="name"/>
+        <field name="code" type="string" column="code" unique="true"/>
+        <field name="currency" type="string" column="currency" nullable="false">
+            <options>
+                <option name="default">MXN</option>
+            </options>
+        </field>
+        <many-to-one field="organization" target-entity="App\Entity\Organization" inversed-by="salesCenters">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+            <join-column name="organization_id" referenced-column-name="id" nullable="false"/>
+        </many-to-one>
+        <field name="zipCode" type="string" column="zip_code"/>
+        <many-to-one field="country" target-entity="App\Entity\Country">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+            <join-column name="country_id" referenced-column-name="id" nullable="false"/>
+        </many-to-one>
+        <many-to-one field="state" target-entity="App\Entity\State">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+            <join-column name="state_id" referenced-column-name="id" nullable="false"/>
+        </many-to-one>
+        <many-to-one field="municipality" target-entity="App\Entity\Municipality">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+            <join-column name="municipality_id" referenced-column-name="id" nullable="false"/>
+        </many-to-one>
+        <field name="town" type="string" column="town" nullable="true"/>
+        <many-to-one field="colony" target-entity="App\Entity\Colony">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+            <join-column name="colony_id" referenced-column-name="id" nullable="false"/>
+        </many-to-one>
+        <field name="street" type="string" column="street"/>
+        <field name="externalNumber" type="string" column="external_number"/>
+        <field name="internalNumber" type="string" column="internal_number" nullable="true"/>
+        <many-to-many field="devolutionSystems" target-entity="DevolutionSystem">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+            <join-table name="sales_center_system">
+                <join-columns>
+                    <join-column name="sales_center_id" referenced-column-name="id"/>
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="devolution_system_id" referenced-column-name="id"/>
+                </inverse-join-columns>
+            </join-table>
+        </many-to-many>
+        <one-to-many field="concessionaires" target-entity="Concessionary" mapped-by="salesCenter"/>
+        <field name="isRecovers" type="boolean" column="is_recovers"/>
+        <field name="isActive" type="boolean" column="is_active"/>
+        <field name="locale" type="string" column="locale" nullable="false">
+            <options>
+                <option name="default">es_MX</option>
+            </options>
+        </field>
+        <field name="regionId" type="string" column="region_id"/>
+        <field name="timeZone" type="string" column="time_zone">
+            <options>
+                <option name="default">America/Mexico_City</option>
+            </options>
+        </field>
+        <field name="createdAt" type="datetime_immutable" column="created_at" nullable="true"/>
+        <field name="updatedAt" type="datetime_immutable" column="updated_at" nullable="true"/>
+        <lifecycle-callbacks>
+            <lifecycle-callback type="prePersist" method="setCreatedAt"/>
+            <lifecycle-callback type="preUpdate" method="setUpdatedAt"/>
+        </lifecycle-callbacks>
+    </entity>
+</doctrine-mapping>

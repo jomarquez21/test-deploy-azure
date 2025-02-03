@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This entity does not follow our conventions because it is a mapping from an external application. -->
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity repository-class="App\Repository\Interfactura\FacturaRepository" name="App\Entity\Interfactura\Factura" table="interfactura_factura">
+        <id name="id" type="integer" column="id">
+            <generator strategy="IDENTITY"/>
+        </id>
+        <one-to-one field="emisor" target-entity="App\Entity\Interfactura\Emisor">
+            <join-column name="emisor_id" referenced-column-name="id" nullable="false"/>
+        </one-to-one>
+        <one-to-one field="receptor" target-entity="App\Entity\Interfactura\Receptor">
+            <join-column name="receptor_id" referenced-column-name="id" nullable="false"/>
+        </one-to-one>
+        <one-to-one field="encabezado" target-entity="App\Entity\Interfactura\Encabezado">
+            <join-column name="encabezado_id" referenced-column-name="id" nullable="false"/>
+        </one-to-one>
+        <field name="createdAt" type="datetime_immutable" column="created_at" nullable="true"/>
+        <field name="updatedAt" type="datetime_immutable" column="updated_at" nullable="true"/>
+        <lifecycle-callbacks>
+            <lifecycle-callback type="prePersist" method="setCreatedAt"/>
+            <lifecycle-callback type="preUpdate" method="setUpdatedAt"/>
+        </lifecycle-callbacks>
+    </entity>
+</doctrine-mapping>

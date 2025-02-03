@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity repository-class="App\Repository\JournalEntryLoggerRepository" name="App\Entity\JournalEntryLogger" table="journal_entry_logger">
+        <id name="id" type="integer" column="id">
+            <generator strategy="IDENTITY"/>
+        </id>
+        <many-to-one field="salesCenter" target-entity="App\Entity\SalesCenter">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+            <join-column name="sales_center_id" referenced-column-name="id" nullable="false"/>
+        </many-to-one>
+        <many-to-one field="user" target-entity="App\Entity\User">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+            <join-column name="user_id" referenced-column-name="id" nullable="true"/>
+        </many-to-one>
+        <many-to-many field="journalEntries" target-entity="App\Entity\AbstractJournalEntry">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+            <join-table name="journal_entry_logger_journal_entry">
+                <join-columns>
+                    <join-column name="journal_entry_logger_id" referenced-column-name="id"/>
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="journal_entry_id" referenced-column-name="id" unique="true" on-delete="CASCADE"/>
+                </inverse-join-columns>
+            </join-table>
+        </many-to-many>
+        <field name="fileName" type="string" column="file_name" nullable="false"/>
+        <field name="totalLines" type="integer" column="total_lines" nullable="false"/>
+        <field name="status" type="string" column="status" enum-type="App\Entity\Enum\JournalEntryLoggerStatus" column-definition="ENUM('downloaded', 'send-failure', 'sending', 'send-success')"/>
+        <field name="createdAt" type="datetime_immutable" column="created_at" nullable="true"/>
+        <field name="updatedAt" type="datetime_immutable" column="updated_at" nullable="true"/>
+        <lifecycle-callbacks>
+            <lifecycle-callback type="prePersist" method="setCreatedAt"/>
+            <lifecycle-callback type="preUpdate" method="setUpdatedAt"/>
+        </lifecycle-callbacks>
+    </entity>
+</doctrine-mapping>

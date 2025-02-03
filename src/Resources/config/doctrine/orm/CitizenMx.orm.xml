@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity repository-class="App\Repository\CitizenMxRepository" name="App\Entity\CitizenMx">
+        <field name="externalNumber" type="string" column="external_number"/>
+        <field name="internalNumber" type="string" column="internal_number" nullable="true"/>
+        <field name="town" type="string" column="town" nullable="true"/>
+        <field name="zipCode" type="string" column="zip_code"/>
+        <field name="voterKey" type="string" column="voter_key"/>
+        <field name="populationId" type="string" column="population_id"/>
+        <field name="taxRegister" type="string" column="tax_register"/>
+        <field name="street" type="string" column="street"/>
+    </entity>
+</doctrine-mapping>

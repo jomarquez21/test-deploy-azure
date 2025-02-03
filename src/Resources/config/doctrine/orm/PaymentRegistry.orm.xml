@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity repository-class="App\Repository\PaymentRegistryRepository" name="App\Entity\PaymentRegistry" table="payment_registry">
+        <id name="id" type="integer" column="id">
+            <generator strategy="IDENTITY"/>
+        </id>
+        <one-to-many field="promissoryNotes" target-entity="App\Entity\PromissoryNote" mapped-by="paymentRegistry">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+        </one-to-many>
+        <one-to-many field="paymentDepositReceipts" target-entity="App\Entity\PaymentDepositReceipt" mapped-by="paymentRegistry">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+        </one-to-many>
+        <many-to-one field="concessionary" target-entity="App\Entity\Concessionary">
+            <join-columns>
+                <join-column name="concessionary_id" referenced-column-name="id" nullable="false"/>
+            </join-columns>
+        </many-to-one>
+        <many-to-one field="salesCenter" target-entity="App\Entity\SalesCenter">
+            <join-column name="sales_center_id" referenced-column-name="id" nullable="false"/>
+        </many-to-one>
+        <field name="amount" type="float" column="amount" nullable="true"/>
+        <field name="bankTransactionNumber" type="string" column="bank_transaction_number" nullable="true" unique="false"/>
+        <field name="paymentDate" type="datetime_immutable" column="payment_date" nullable="true"/>
+        <field name="createdAt" type="datetime_immutable" column="created_at" nullable="true"/>
+        <field name="updatedAt" type="datetime_immutable" column="updated_at" nullable="true"/>
+        <!-- @todo: Check why the column for "type" field is called "status". -->
+        <field name="type" type="string" column="status" enum-type="App\Entity\Enum\PaymentRegistryType" column-definition="ENUM('uncollectible', 'bank-transfer')"/>
+        <lifecycle-callbacks>
+            <lifecycle-callback type="prePersist" method="setCreatedAt"/>
+            <lifecycle-callback type="preUpdate" method="setUpdatedAt"/>
+        </lifecycle-callbacks>
+    </entity>
+</doctrine-mapping>

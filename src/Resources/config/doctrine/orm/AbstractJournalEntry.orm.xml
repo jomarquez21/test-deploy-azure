@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:gedmo="http://gediminasm.org/schemas/orm/doctrine-extensions-mapping" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="App\Entity\AbstractJournalEntry" repository-class="App\Repository\JournalEntryRepository" inheritance-type="JOINED" table="journal_entry">
+        <discriminator-column name="discr" type="string" length="255"/>
+        <discriminator-map>
+            <discriminator-mapping value="inventory_journal_entry" class="App\Entity\InventoryJournalEntry"/>
+            <discriminator-mapping value="invoice_journal_entry" class="App\Entity\InvoiceJournalEntry"/>
+            <discriminator-mapping value="promissory_note_journal_entry" class="App\Entity\PaymentRegistryJournalEntry"/>
+        </discriminator-map>
+        <id name="id" type="integer" column="id">
+            <generator strategy="IDENTITY"/>
+        </id>
+        <field name="operationDateReference" type="string" column="operation_date_reference"/>
+        <field name="salesCenterCode" type="string" column="sales_center_code"/>
+        <field name="sourceSystem" type="string" column="source_system"/>
+        <field name="countryCode" type="string" column="country_code"/>
+        <field name="organizationLegalCode" type="string" column="organization_legal_code"/>
+        <field name="routeIdentifier" type="string" column="route_identifier"/>
+        <field name="layoutVersion" type="string" column="layout_version"/>
+        <field name="costCenterCode" type="string" column="cost_center_code"/>
+        <field name="sentAt" type="datetime_immutable" column="sent_at" nullable="true"/>
+        <field name="status" type="string" column="status" enum-type="App\Entity\Enum\JournalEntryStatus" column-definition="ENUM('process-failure', 'processing', 'process-success', 'unprocessed')"/>
+        <field name="type" type="string" column="type" enum-type="App\Entity\Enum\JournalEntryType" column-definition="ENUM('inventory-journal-entry', 'invoice-journal-entry', 'payment-registry-journal-entry')"/>
+        <many-to-one field="salesCenter" target-entity="App\Entity\SalesCenter">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+            <join-column name="sales_center_id" referenced-column-name="id" nullable="false"/>
+        </many-to-one>
+        <field name="createdAt" type="datetime_immutable" column="created_at" nullable="true"/>
+        <field name="updatedAt" type="datetime_immutable" column="updated_at" nullable="true"/>
+        <lifecycle-callbacks>
+            <lifecycle-callback type="prePersist" method="setCreatedAt"/>
+            <lifecycle-callback type="preUpdate" method="setUpdatedAt"/>
+        </lifecycle-callbacks>
+    </entity>
+</doctrine-mapping>

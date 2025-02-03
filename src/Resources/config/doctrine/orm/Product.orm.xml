@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity repository-class="App\Repository\ProductRepository" name="App\Entity\Product" table="product">
+        <id name="id" type="integer" column="id">
+            <generator strategy="IDENTITY"/>
+        </id>
+        <field name="internalCode" type="string" column="internal_code" nullable="false" unique="true"/>
+        <field name="barCode" type="string" column="bar_code" nullable="false"/>
+        <field name="largeName" type="string" column="large_name" nullable="false"/>
+        <field name="shortName" type="string" column="short_name" nullable="false"/>
+        <field name="keySat" type="string" column="key_sat" nullable="false"/>
+        <field name="unitKey" type="string" column="unit_key" nullable="false"/>
+        <field name="shelfLife" type="integer" column="shelf_life" nullable="false"/>
+        <field name="returnLimit" type="integer" column="return_limit" nullable="false"/>
+        <field name="isValid" type="boolean" column="is_valid" nullable="false"/>
+        <field name="packagingCode" type="string" column="packaging_code" nullable="false"/>
+        <field name="packagingCapacity" type="integer" column="packaging_capacity" nullable="false">
+            <options>
+                <option name="default">0</option>
+            </options>
+        </field>
+        <field name="createdAt" type="datetime_immutable" column="created_at" nullable="true"/>
+        <field name="updatedAt" type="datetime_immutable" column="updated_at" nullable="true"/>
+        <many-to-one field="brand" target-entity="App\Entity\Brand" inversed-by="products">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+            <join-column name="brand_id" referenced-column-name="id"/>
+        </many-to-one>
+        <many-to-one field="organization" target-entity="App\Entity\Organization">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+            <join-column name="organization_id" referenced-column-name="id"/>
+        </many-to-one>
+        <many-to-many field="taxes" target-entity="App\Entity\Tax">
+            <join-table name="products_taxes">
+                <join-columns>
+                    <join-column name="product_id" referenced-column-name="id"/>
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="tax_id" referenced-column-name="id"/>
+                </inverse-join-columns>
+            </join-table>
+        </many-to-many>
+        <many-to-one field="productCategory" target-entity="App\Entity\ProductCategory" inversed-by="products">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+            <join-column name="product_category_id" referenced-column-name="id"/>
+        </many-to-one>
+        <one-to-many field="prices" target-entity="ProductPrice" mapped-by="product">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+        </one-to-many>
+        <lifecycle-callbacks>
+            <lifecycle-callback type="prePersist" method="setCreatedAt"/>
+            <lifecycle-callback type="preUpdate" method="setUpdatedAt"/>
+        </lifecycle-callbacks>
+    </entity>
+</doctrine-mapping>

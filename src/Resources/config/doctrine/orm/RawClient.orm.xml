@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity repository-class="App\Repository\RawClientRepository" name="App\Entity\RawClient" table="raw_client">
+        <id name="id" type="integer" column="id">
+            <generator strategy="IDENTITY"/>
+        </id>
+        <indexes>
+            <index name="search_by_party_number_idx" columns="party_number"/>
+        </indexes>
+        <one-to-one field="client" target-entity="App\Entity\Client">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+            <join-column name="client_id" referenced-column-name="id" nullable="true"/>
+        </one-to-one>
+        <field name="partyNumber" type="string" column="party_number" nullable="false" unique="true"/>
+        <field name="data" type="json" column="data"/>
+        <field name="createdAt" type="datetime_immutable" column="created_at" nullable="true"/>
+        <field name="updatedAt" type="datetime_immutable" column="updated_at" nullable="true"/>
+        <lifecycle-callbacks>
+            <lifecycle-callback type="prePersist" method="setCreatedAt"/>
+            <lifecycle-callback type="preUpdate" method="setUpdatedAt"/>
+        </lifecycle-callbacks>
+    </entity>
+</doctrine-mapping>

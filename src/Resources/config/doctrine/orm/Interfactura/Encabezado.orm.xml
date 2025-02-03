@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This entity does not follow our conventions because it is a mapping from an external application. -->
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity repository-class="App\Repository\Interfactura\EncabezadoRepository" name="App\Entity\Interfactura\Encabezado" table="interfactura_encabezado">
+        <id name="id" type="integer" column="id">
+            <generator strategy="IDENTITY"/>
+        </id>
+        <field name="tipoDocumento" type="string" column="tipo_documento" length="100"/>
+        <field name="agencia" type="string" column="agencia" length="100"/>
+        <field name="agenciaId" type="string" column="agencia_id" length="100"/>
+        <field name="folio" type="string" column="folio" length="100"/>
+        <field name="ruta" type="string" column="ruta" length="100"/>
+        <field name="serie" type="string" column="serie" length="100"/>
+        <field name="folioReferencia" type="string" column="folio_referencia" length="100"/>
+        <field name="numeroFactura" type="string" column="numero_factura" length="100"/>
+        <field name="regimenFiscalEmisor" type="string" column="regimen_fiscal_emisor" length="100"/>
+        <field name="regionId" type="string" column="region_id" length="100"/>
+        <field name="formaPago" type="string" column="forma_pago" length="100"/>
+        <field name="codigoCliente" type="string" column="codigo_cliente" length="100"/>
+        <field name="cadena" type="string" column="cadena" length="100"/>
+        <field name="alternateIdentificationGln" type="string" column="alternate_identification_gln" length="100"/>
+        <field name="anoAprobacion" type="string" column="ano_aprobacion" length="100"/>
+        <field name="cantidadLineasFactura" type="string" column="cantidad_lineas_factura" length="100"/>
+        <field name="cantidadUnidades" type="string" column="cantidad_unidades" length="100"/>
+        <field name="cfdiExportacion" type="string" column="cfdi_exportacion" length="100"/>
+        <field name="versionCFDI" type="string" column="version_cfdi" length="100"/>
+        <field name="califTradingPartnerProv" type="string" column="calif_trading_partner_prov" length="100"/>
+        <field name="importeConLetra" type="string" column="importe_con_letra" length="255"/>
+        <field name="iva" type="string" column="iva" length="100"/>
+        <field name="ivaPct" type="string" column="iva_pct" length="100"/>
+        <field name="LOB" type="string" column="lob" length="100"/>
+        <field name="metodoPago" type="string" column="metodo_pago" length="100"/>
+        <field name="fecha" type="string" column="fecha" length="100"/>
+        <field name="hora" type="string" column="hora" length="100"/>
+        <field name="moneda" type="string" column="moneda" length="100"/>
+        <field name="fechaLiquidacion" type="string" column="fecha_liquidacion" length="100"/>
+        <field name="cantidadEmpaques" type="string" column="cantidad_empaques" length="100"/>
+        <field name="subTotal" type="string" column="sub_total" length="100"/>
+        <field name="total" type="string" column="total" length="100"/>
+        <field name="montoIeps" type="string" column="monto_ieps" length="100"/>
+        <field name="montoSubTotalApIva" type="string" column="monto_sub_total_ap_iva" length="100"/>
+        <field name="montoTotalPagar" type="string" column="monto_total_pagar" length="100"/>
+        <field name="tradingPartnerProv" type="string" column="trading_partner_prov" length="100"/>
+        <field name="transaction" type="string" column="transaction" length="100"/>
+        <field name="codDescuento" type="string" column="cod_descuento" length="100"/>
+        <field name="codZona" type="string" column="cod_zona" length="100"/>
+        <field name="codigoVendedor" type="string" column="codigo_vendedor" length="100"/>
+        <field name="condicionPago" type="string" column="condicion_pago" length="100"/>
+        <field name="consecutivoInterno" type="string" column="consecutivo_interno" length="100"/>
+        <field name="contactoCompras" type="string" column="contacto_compras" length="100"/>
+        <field name="customsGln" type="string" column="customs_gln" length="100"/>
+        <field name="deliveryDate" type="string" column="delivery_date" length="100"/>
+        <field name="descricpcionMoneda" type="string" column="descricpcion_moneda" length="100"/>
+        <field name="diasPago" type="string" column="dias_pago" length="100"/>
+        <field name="documentStatus" type="string" column="document_status" length="100"/>
+        <field name="eanLugarExpide" type="string" column="ean_lugar_expide" length="100"/>
+        <field name="eanProveedor" type="string" column="ean_proveedor" length="100"/>
+        <field name="eanReceptor" type="string" column="ean_receptor" length="100"/>
+        <field name="estatus" type="string" column="estatus" length="100"/>
+        <field name="fechaFolioFiscalOrig" type="string" column="fecha_folio_fiscal_orig" length="100"/>
+        <field name="fechaNumeroContraRecibo" type="string" column="fecha_numero_contra_recibo" length="100"/>
+        <field name="fechaOrdenCompra" type="string" column="fecha_orden_compra" length="100"/>
+        <field name="fechaPedido" type="string" column="fecha_pedido" length="100"/>
+        <field name="fechaVencimiento" type="string" column="fecha_vencimiento" length="100"/>
+        <field name="funcDivisa" type="string" column="func_divisa" length="100"/>
+        <field name="iepsId" type="string" column="ieps_id" length="100"/>
+        <field name="numeroOrdenCompra" type="string" column="numero_orden_compra" length="100"/>
+        <field name="numeroReceptor" type="string" column="numero_receptor" length="100"/>
+        <field name="numeroSolicitud" type="string" column="numero_solicitud"/>
+        <field name="porcentajeDescuento" type="string" column="porcentaje_descuento" length="100"/>
+        <field name="porcentajeDescuentoProntoPago" type="string" column="porcentaje_descuento_pronto_pago" length="100"/>
+        <field name="porcentajeNoPlicado" type="string" column="porcentaje_no_plicado" length="100"/>
+        <field name="procesoId" type="string" column="proceso_id" length="100"/>
+        <field name="refTerminoTiempoPago" type="string" column="ref_termino_tiempo_pago" length="100"/>
+        <field name="refTiempoPago" type="string" column="ref_tiempo_pago" length="100"/>
+        <field name="tipoCambio" type="string" column="tipo_cambio" length="100"/>
+        <field name="numProveedor" type="string" column="num_proveedor" length="100"/>
+        <field name="tipoEspecialServicio" type="string" column="tipo_especial_servicio" length="100"/>
+        <field name="transportista" type="string" column="transportista" length="100"/>
+        <field name="viaEmbarque" type="string" column="via_embarque" length="100"/>
+        <field name="montoDescuento" type="string" column="monto_descuento" length="100"/>
+        <field name="montoDescuentoProntoPago" type="string" column="monto_descuento_pronto_pago" length="100"/>
+        <field name="montoFolioFiscalOrig" type="string" column="monto_folio_fiscal_orig" length="100"/>
+        <field name="montoMerma" type="string" column="monto_merma" length="100"/>
+        <field name="montoTotalDescuento" type="string" column="monto_total_descuento" length="100"/>
+        <field name="motivoDescuento" type="string" column="motivo_descuento" length="100"/>
+        <field name="notas" type="array" column="notas"/>
+        <field name="misc02" type="string" column="misc_02" length="100"/>
+        <field name="misc03" type="string" column="misc_03" length="100"/>
+        <field name="misc07" type="string" column="misc_07" length="100"/>
+        <field name="misc10" type="string" column="misc_10" length="100"/>
+        <field name="misc12" type="string" column="misc_12" length="100"/>
+        <field name="misc13" type="string" column="misc_13" length="100"/>
+        <field name="misc14" type="string" column="misc_14" length="100"/>
+        <field name="misc15" type="string" column="misc_15" length="100"/>
+        <field name="misc16" type="string" column="misc_16" length="100"/>
+        <field name="misc18" type="string" column="misc_18" length="100"/>
+        <field name="misc20" type="string" column="misc_20" length="100"/>
+        <field name="misc21" type="string" column="misc_21" length="100"/>
+        <field name="misc22" type="string" column="misc_22" length="100"/>
+        <field name="misc23" type="string" column="misc_23" length="100"/>
+        <field name="misc24" type="string" column="misc_24" length="100"/>
+        <field name="misc25" type="string" column="misc_25" length="100"/>
+        <field name="misc26" type="string" column="misc_26" length="100"/>
+        <field name="misc27" type="string" column="misc_27" length="100"/>
+        <field name="misc29" type="string" column="misc_29" length="100"/>
+        <field name="misc33" type="string" column="misc_33" length="100"/>
+        <field name="misc34" type="string" column="misc_34" length="100"/>
+        <field name="misc35" type="string" column="misc_35" length="100"/>
+        <field name="misc36" type="string" column="misc_36" length="100"/>
+        <field name="misc37" type="string" column="misc_37" length="100"/>
+        <field name="misc38" type="string" column="misc_38" length="100"/>
+        <field name="misc39" type="string" column="misc_39" length="100"/>
+        <field name="misc40" type="string" column="misc_40" length="100"/>
+        <field name="misc41" type="string" column="misc_41" length="100"/>
+        <field name="misc42" type="string" column="misc_42" length="100"/>
+        <field name="misc43" type="string" column="misc_43" length="100"/>
+        <field name="misc44" type="string" column="misc_44" length="100"/>
+        <field name="misc45" type="string" column="misc_45" length="100"/>
+        <field name="misc46" type="string" column="misc_46" length="100"/>
+        <field name="misc47" type="string" column="misc_47" length="100"/>
+        <field name="misc48" type="string" column="misc_48" length="100"/>
+        <field name="misc49" type="string" column="misc_49" length="100"/>
+        <field name="numCtaPago" type="string" column="num_cta_pago" length="100"/>
+        <field name="numPedido" type="string" column="num_pedido" length="100"/>
+        <field name="numeroContraRecibo" type="string" column="numero_contra_recibo" length="100"/>
+        <field name="numeroEmisor" type="string" column="numero_emisor" length="100"/>
+        <field name="nombreAduana" type="string" column="nombre_aduana" length="100"/>
+        <field name="nombreAduanaCiudad" type="string" column="nombre_aduana_ciudad" length="100"/>
+        <field name="nombreVendedor" type="string" column="nombre_vendedor" length="100"/>
+        <field name="complementos" type="array" column="complementos"/>
+        <one-to-one field="tienda" target-entity="App\Entity\Interfactura\Tienda">
+            <join-column name="tienda_id" referenced-column-name="id"/>
+        </one-to-one>
+        <many-to-many field="cuerpos" target-entity="App\Entity\Interfactura\Cuerpo">
+            <join-table name="interfactura_encabezado_cuerpo">
+                <join-columns>
+                    <join-column name="encabezado_id" referenced-column-name="id"/>
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="cuerpo_id" referenced-column-name="id"/>
+                </inverse-join-columns>
+            </join-table>
+        </many-to-many>
+        <many-to-many field="impuestos" target-entity="App\Entity\Interfactura\Impuesto">
+            <join-table name="interfactura_encabezado_impuesto">
+                <join-columns>
+                    <join-column name="encabezado_id" referenced-column-name="id"/>
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="impuesto_id" referenced-column-name="id"/>
+                </inverse-join-columns>
+            </join-table>
+        </many-to-many>
+        <one-to-one field="lugarExpedicion" target-entity="App\Entity\Interfactura\Domicilio">
+            <join-column name="domicilio_id" referenced-column-name="id"/>
+        </one-to-one>
+        <field name="createdAt" type="datetime_immutable" column="created_at" nullable="true"/>
+        <field name="updatedAt" type="datetime_immutable" column="updated_at" nullable="true"/>
+        <lifecycle-callbacks>
+            <lifecycle-callback type="prePersist" method="setCreatedAt"/>
+            <lifecycle-callback type="preUpdate" method="setUpdatedAt"/>
+        </lifecycle-callbacks>
+    </entity>
+</doctrine-mapping>

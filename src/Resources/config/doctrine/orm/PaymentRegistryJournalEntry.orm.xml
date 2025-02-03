@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity repository-class="App\Repository\PaymentRegistryJournalEntryRepository" name="App\Entity\PaymentRegistryJournalEntry">
+        <field name="linesNumber" type="integer" column="lines_number"/>
+        <field name="paymentRegistryType" type="string" column="payment_registry_type"/>
+        <field name="concessionaryBankReference" type="string" column="concessionary_bank_reference"/>
+        <field name="paymentRegistryBankTransactionNumber" type="string" column="payment_registry_bank_transaction_number"/>
+        <field name="promissoryNoteAmount" type="string" column="promissory_note_amount"/>
+        <field name="paymentRegistryAmount" type="string" column="payment_registry_amount"/>
+        <field name="paymentRegistryAmountDifference" type="string" column="payment_registry_amount_difference"/>
+        <field name="promissoryNoteCreatedAtReference" type="string" column="promissory_note_created_at_reference"/>
+        <field name="promissoryNoteNumber" type="string" column="promissory_note_number"/>
+        <field name="clientName" type="string" column="client_name"/>
+    </entity>
+</doctrine-mapping>

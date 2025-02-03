@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity repository-class="App\Repository\ClientRepository" name="App\Entity\Client" table="client">
+        <id name="id" type="integer" column="id">
+            <generator strategy="IDENTITY"/>
+        </id>
+        <indexes>
+            <index name="search_by_party_number_idx" columns="party_number"/>
+        </indexes>
+        <field name="partyNumber" type="string" column="party_number" nullable="false"/>
+        <field name="sourceSystem" type="string" column="source_system" nullable="true"/>
+        <field name="sourceSystemReferenceValue" type="string" column="source_system_reference_value" nullable="true"/>
+        <field name="profileId" type="string" column="profile_id" nullable="true"/>
+        <field name="name" type="string" column="name" nullable="true"/>
+        <field name="parentAccountPartyId" type="string" column="parent_account_party_id" nullable="true"/>
+        <field name="parentAccountPartyNumber" type="string" column="parent_account_party_number" nullable="true"/>
+        <field name="parentAccountName" type="string" column="parent_account_name" nullable="true"/>
+        <field name="taxpayerIdNumber" type="string" column="taxpayer_id_number" nullable="true"/>
+        <field name="businessName" type="string" column="business_name" nullable="true"/>
+        <field name="taxRate" type="string" column="tax_rate" nullable="true"/>
+        <!--
+            @todo: Rename column "branch_chain" to "sales_point_type" and update the allowed values in the "ENUM" definition.
+            @see: https://redmine.nubity.com/issues/17769.
+        -->
+        <field name="salesPointType" type="string" column="branch_chain" enum-type="App\Entity\Enum\SalesPointType" nullable="false" column-definition="ENUM('Punto_Venta', 'Cadena')"/>
+        <field name="taxpayerType" type="string" column="taxpayer_type" nullable="true"/>
+        <field name="cfdiUse" type="string" column="cfdi_use" nullable="true"/>
+        <field name="cfdiCreditNoteUse" type="string" column="cfdi_credit_note_use" nullable="true"/>
+        <field name="addressPrincipal" type="string" column="address_principal" nullable="true"/>
+        <field name="addressSecondary" type="string" column="address_secondary" nullable="true"/>
+        <field name="state" type="string" column="state" nullable="true"/>
+        <field name="municipality" type="string" column="municipality" nullable="true"/>
+        <field name="colony" type="string" column="colony" nullable="true"/>
+        <many-to-one field="country" target-entity="App\Entity\Country" inversed-by="clients">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+            <join-column name="county_id" referenced-column-name="id" nullable="false"/>
+        </many-to-one>
+        <field name="zipCode" type="string" column="zip_code" nullable="true"/>
+        <field name="isActive" type="boolean" column="is_active" nullable="false"/>
+        <field name="addressType" type="string" column="address_type" nullable="false"/>
+        <field name="createdAt" type="datetime_immutable" column="created_at" nullable="true"/>
+        <field name="updatedAt" type="datetime_immutable" column="updated_at" nullable="true"/>
+        <lifecycle-callbacks>
+            <lifecycle-callback type="prePersist" method="setCreatedAt"/>
+            <lifecycle-callback type="preUpdate" method="setUpdatedAt"/>
+        </lifecycle-callbacks>
+    </entity>
+</doctrine-mapping>

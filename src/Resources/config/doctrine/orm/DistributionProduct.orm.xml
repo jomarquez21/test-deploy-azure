@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity repository-class="App\Repository\DistributionProductRepository" name="App\Entity\DistributionProduct" table="distribution_product">
+        <id name="id" type="integer" column="id">
+            <generator strategy="IDENTITY"/>
+        </id>
+        <many-to-one field="product" target-entity="App\Entity\Product"/>
+        <many-to-one field="concessionary" target-entity="App\Entity\Concessionary"/>
+        <many-to-one field="salesCenter" target-entity="App\Entity\SalesCenter" inversed-by="concessionaires">
+            <join-column name="sales_center_id" referenced-column-name="id" nullable="false"/>
+        </many-to-one>
+        <field name="quantityAuction" type="integer" column="quantity_auction"/>
+        <field name="quantityConcessionary" type="integer" column="quantity_concessionary"/>
+        <field name="productPriceAuction" type="float" column="product_price_auction"/>
+        <field name="productPriceConcessionary" type="float" column="product_price_concessionary"/>
+        <field name="createdAt" type="datetime_immutable" column="created_at" nullable="true"/>
+        <field name="updatedAt" type="datetime_immutable" column="updated_at" nullable="true"/>
+        <lifecycle-callbacks>
+            <lifecycle-callback type="prePersist" method="setCreatedAt"/>
+            <lifecycle-callback type="preUpdate" method="setUpdatedAt"/>
+        </lifecycle-callbacks>
+    </entity>
+</doctrine-mapping>
