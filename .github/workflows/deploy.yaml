@@ -90,21 +90,21 @@ jobs:
                         --dh dh5 \
                         --pfs dh5;
 
-            -
-                name: 'Synchronize database'
-                run: |
-                    docker compose -f compose.yaml run --rm cli bash -c "\
-                        bin/console doctrine:schema:update --dump-sql --complete -e prod \
-                        && \
-                        bin/console doctrine:migration:migrate --no-interaction -e prod -vvv
-                    "
-
             # -
-            #     name: Login to Docker Hub
+            #     name: 'Synchronize database'
             #     run: |
-            #         echo '${{ secrets.DOCKER_PASSWORD }}' | \
-            #             docker login '${{ vars.DOCKER_REGISTRY }}' --username '${{ vars.DOCKER_USERNAME }}' \
-            #             --password-stdin 
+            #         docker compose -f compose.yaml run --rm cli bash -c "\
+            #             bin/console doctrine:schema:update --dump-sql --complete -e prod \
+            #             && \
+            #             bin/console doctrine:migration:migrate --no-interaction -e prod -vvv
+            #         "
+
+            -
+                name: Login to Docker Hub
+                run: |
+                    echo '${{ secrets.DOCKER_PASSWORD }}' | \
+                        docker login '${{ vars.DOCKER_REGISTRY }}' --username '${{ vars.DOCKER_USERNAME }}' \
+                        --password-stdin 
 
             # - 
             #     name: 'Docker image push'
