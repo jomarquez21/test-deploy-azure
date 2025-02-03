@@ -110,7 +110,7 @@ jobs:
                         --username '${{ vars.VPN_USER }}' \
                         --password '${{ secrets.VPN_PASSWORD }}' \
                         --dh dh5 \
-                        --pfs dh5 || echo "vpnc falló con código $?;
+                        --pfs dh5 || echo "vpnc falló con código $?";
 
                     echo "maybe VPN connected";
 
