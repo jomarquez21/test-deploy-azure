@@ -101,13 +101,12 @@ jobs:
             - 
                 name: Connect to Azure VPN
                 id: vpn-connect
+                if: ${{ 'success' == steps.vpn-installation.conclusion}}
                 run: |
-                    echo ""
-                    echo "****************************************************************************"
-                    echo "Connecting to Azure VPN"
-                      
-                    attempts=0
-                    max_attempts=5
+                    echo "****************************************************************************";
+                    echo "Connecting to Azure VPN";
+                    attempts=0;
+                    max_attempts=5;
 
                     sudo vpnc \
                         --gateway 192.100.176.95 \
@@ -117,7 +116,7 @@ jobs:
                         --password '${{ secrets.VPN_PASSWORD }}' \
                         --dh dh5 \
                         --pfs dh5;
-                    
+
                     echo "pase del comando vpnc (Attempt $((attempts + 1)) of $max_attempts)"
                 
                     # Verificar si la conexión fue exitosa
