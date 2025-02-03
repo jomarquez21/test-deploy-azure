@@ -76,31 +76,20 @@ jobs:
                         --pfs dh5;
             -
                 name: Login to Docker Hub
-                # with:
-                #     registry: ${{ vars.DOCKER_REGISTRY }}
-                #     # registry: <registry-name>.azurecr.io
-                #     # bmecvmfcorcd04.azurecr.io
-                #     username: ${{ vars.DOCKER_USERNAME }}
-                #     password: ${{ secrets.DOCKER_PASSWORD }}
                 run: |
                     docker login '$DOCKER_REGISTRY' --username "$DOCKER_USERNAME" --password-stdin
-                    echo "${{ secrets.DOCKER_PASSWORD }}" | docker login ${{ vars.DOCKER_REGISTRY }} -u ${{ secrets.DOCKER_USERNAME }} --password-stdin 
-                # uses: docker/login-action@v3
-            # - 
-            #     name: Log in to ACR
-            #     uses: azure/docker-login@v1
-            #     with:
-            #         login-server: ${{ vars.DOCKER_REGISTRY }}
-            #         username: ${{ vars.DOCKER_USERNAME }}
-            #         password: ${{ secrets.DOCKER_PASSWORD }}
+                    echo "${{ secrets.DOCKER_PASSWORD }}" | docker login ${{ vars.DOCKER_REGISTRY }} --username \
+                        ${{ secrets.DOCKER_USERNAME }} --password-stdin 
 
             # - 
             #     name: 'Docker image push'
             #     run: |
             #         docker push '${{ vars.DOCKER_TAG }}'
+
             # -
             #     name: 'Azure logout'
             #     run: docker compose -f compose.yaml run --rm cli az logout'
+
             -
                 name: 'Azure container restore'
                 id: azure-container-restore
@@ -118,5 +107,5 @@ jobs:
 
             -
                   name: 'Disconnect VPN'
-                  if: ${{ (success() || failure()) && 'success' == steps.azure-container-restore.conclusion }}
+                  if: ${{ 'success' == steps.vpn-connect.conclusion }}
                   run: sudo vpnc-disconnect
