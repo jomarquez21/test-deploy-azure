@@ -108,28 +108,26 @@ jobs:
                       
                     attempts=0
                     max_attempts=5
-                  
-                    while [ $attempts -lt $max_attempts ]; do
-                        sudo vpnc \
-                            --gateway 192.100.176.95 \
-                            --id VPNADTmp \
-                            --secret '${{ secrets.VPN_SECRET }}' \
-                            --username '${{ vars.VPN_USER }}' \
-                            --password '${{ secrets.VPN_PASSWORD }}' \
-                            --dh dh5 \
-                            --pfs dh5;
+
+                    sudo vpnc \
+                        --gateway 192.100.176.95 \
+                        --id VPNADTmp \
+                        --secret '${{ secrets.VPN_SECRET }}' \
+                        --username '${{ vars.VPN_USER }}' \
+                        --password '${{ secrets.VPN_PASSWORD }}' \
+                        --dh dh5 \
+                        --pfs dh5;
                     
-                        echo "pase del comando vpnc (Attempt $((attempts + 1)) of $max_attempts)"
-                  
-                        # Verificar si la conexión fue exitosa
-                        if [ $? -eq 0 ]; then
-                            break;  # Éxito, salir del loop.
-                        else
-                            attempts=$((attempts + 1))
-                            echo "Connection attempt failed (Attempt $attempts of $max_attempts)"
-                            sleep 5;  # Esperar antes de reintentar
-                        fi
-                    done
+                    echo "pase del comando vpnc (Attempt $((attempts + 1)) of $max_attempts)"
+                
+                    # Verificar si la conexión fue exitosa
+                    if [ $? -eq 0 ]; then
+                        break;  # Éxito, salir del loop.
+                    else
+                        attempts=$((attempts + 1))
+                        echo "Connection attempt failed (Attempt $attempts of $max_attempts)"
+                        sleep 5;  # Esperar antes de reintentar
+                    fi
                   
                     if [ $attempts -eq $max_attempts ]; then
                         echo "Failed to connect after $max_attempts attempts. Exiting.";
@@ -137,7 +135,6 @@ jobs:
                     fi
 
                     echo "VPN connected"
-                  
 
             # -
             #     name: 'Synchronize database'
