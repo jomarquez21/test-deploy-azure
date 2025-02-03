@@ -113,6 +113,8 @@ jobs:
                 id: docker-authentication
                 if: ${{ 'success' == steps.vpn-connect.conclusion}}
                 run: |
+                    set -x;
+                    docker --version;
                     echo '${{ secrets.DOCKER_PASSWORD }}' | \
                         docker --log-level debug login '${{ vars.DOCKER_REGISTRY }}' \
                         --username '${{ vars.DOCKER_USERNAME }}' --password-stdin
