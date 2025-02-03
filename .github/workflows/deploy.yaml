@@ -101,10 +101,12 @@ jobs:
 
             -
                 name: Login to Docker Hub
+                id: docker-authentication
+                if: ${{ 'success' == steps.vpn-connect.conclusion}}
                 run: |
                     echo '${{ secrets.DOCKER_PASSWORD }}' | \
                         docker login '${{ vars.DOCKER_REGISTRY }}' --username '${{ vars.DOCKER_USERNAME }}' \
-                        --password-stdin 
+                        --password-stdin
 
             # - 
             #     name: 'Docker image push'
