@@ -96,7 +96,7 @@ jobs:
                     docker compose -f compose.yaml run --rm cli bash -c "\
                         bin/console doctrine:schema:update --dump-sql --complete -e prod \
                         && \
-                        bin/console doctrine:migration:migrate --no-interaction -e prod -vvv'
+                        bin/console doctrine:migration:migrate --no-interaction -e prod -vvv
                     "
 
             # -
