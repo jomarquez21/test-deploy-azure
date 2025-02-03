@@ -75,12 +75,12 @@ jobs:
                         --dh dh5 \
                         --pfs dh5;
 
-            -
-                name: Login to Docker Hub
-                run: |
-                    echo '${{ secrets.DOCKER_PASSWORD }}' | \
-                        docker login '${{ vars.DOCKER_REGISTRY }}' --username '${{ vars.DOCKER_USERNAME }}' \
-                        --password-stdin 
+            # -
+            #     name: Login to Docker Hub
+            #     run: |
+            #         echo '${{ secrets.DOCKER_PASSWORD }}' | \
+            #             docker login '${{ vars.DOCKER_REGISTRY }}' --username '${{ vars.DOCKER_USERNAME }}' \
+            #             --password-stdin 
 
             # - 
             #     name: 'Docker image push'
