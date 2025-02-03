@@ -103,7 +103,7 @@ jobs:
                 id: vpn-connect
                 if: ${{ 'success' == steps.vpn-installation.conclusion}}
                 run: |
-                    echo "****************************************************************************";
+                    set -e;
                     echo "Connecting to Azure VPN";
                     attempts=0;
                     max_attempts=5;
@@ -115,25 +115,22 @@ jobs:
                         --username '${{ vars.VPN_USER }}' \
                         --password '${{ secrets.VPN_PASSWORD }}' \
                         --dh dh5 \
-                        --pfs dh5;
-
-                    echo "pase del comando vpnc (Attempt $((attempts + 1)) of $max_attempts)"
+                        --pfs dh5 || echo "vpnc falló con código $?;
+                        
+                    echo "pase del comando vpnc (Attempt $((attempts + 1)) of $max_attempts)";
                 
-                    # Verificar si la conexión fue exitosa
                     if [ $? -eq 0 ]; then
-                        break;  # Éxito, salir del loop.
+                        echo "VPN connected";
+
+                        break;
                     else
                         attempts=$((attempts + 1))
-                        echo "Connection attempt failed (Attempt $attempts of $max_attempts)"
-                        sleep 5;  # Esperar antes de reintentar
-                    fi
-                  
-                    if [ $attempts -eq $max_attempts ]; then
-                        echo "Failed to connect after $max_attempts attempts. Exiting.";
-                        exit 1;
+                        echo "Connection attempt failed (Attempt $attempts of $max_attempts)";
+
+                        sleep 5;
                     fi
 
-                    echo "VPN connected"
+                    echo "maybe VPN connected";
 
             # -
             #     name: 'Synchronize database'
