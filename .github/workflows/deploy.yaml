@@ -74,15 +74,15 @@ jobs:
                         --password '${{ secrets.VPN_PASSWORD }}' \
                         --dh dh5 \
                         --pfs dh5;
-            # -
-            #     name: Login to Docker Hub
-            #     run: |
-            #         docker login '$DOCKER_REGISTRY0 --username "$DOCKER_USERNAME" --password-stdin
-            #     with:
-            #         registry: ${{ vars.DOCKER_REGISTRY }}
-            #         username: ${{ vars.DOCKER_USERNAME }}
-            #         password: ${{ secrets.DOCKER_PASSWORD }}
-            #     uses: docker/login-action@v3
+            -
+                name: Login to Docker Hub
+                # run: |
+                #     docker login '$DOCKER_REGISTRY0 --username "$DOCKER_USERNAME" --password-stdin
+                with:
+                    registry: ${{ vars.DOCKER_REGISTRY }}
+                    username: ${{ vars.DOCKER_USERNAME }}
+                    password: ${{ secrets.DOCKER_PASSWORD }}
+                uses: docker/login-action@v3
             # - 
             #     name: Log in to ACR
             #     uses: azure/docker-login@v1
@@ -98,12 +98,6 @@ jobs:
             # -
             #     name: 'Azure logout'
             #     run: docker compose -f compose.yaml run --rm cli az logout'
-
-            # -
-            #     name: 'Azure login'
-            #     run: docker compose -f compose.yaml run --rm cli 
-    
-            # docker compose -f compose.yaml run --rm cli bash -c \
             -
                 name: 'Azure container restore'
                 id: azure-container-restore
@@ -123,43 +117,3 @@ jobs:
                   name: 'Disconnect VPN'
                   if: ${{ (success() || failure()) && 'success' == steps.azure-container-restore.conclusion }}
                   run: sudo vpnc-disconnect
-
-            # -
-            #     name: 'Configure Composer authentication for GitHub ...'
-            #     if: ${{ env.COMPOSER_GITHUB_TOKEN }}
-            #     run: docker compose run --rm cli composer config github-oauth.github.com '${{ secrets.COMPOSER_GITHUB_TOKEN }}'
-            #     env:
-            #         COMPOSER_GITHUB_TOKEN: '${{ secrets.COMPOSER_GITHUB_TOKEN }}'
-            # -
-            #     name: 'Build Composer dependencies'
-            #     run: docker compose run --rm cli composer install --prefer-dist --optimize-autoloader --no-interaction
-            # -
-            #     name: 'Create database certificate'
-            #     run: |
-            #         mkdir --parents ./var/mysql
-            #         echo '${{ secrets.AZURE_DATABASE_CERTIFICATE }}' > ./var/mysql/client-key.pem;
-            #         chmod 0400 ./var/mysql/client-key.pem;
-            # -
-            #     name: 'Install VPN client'
-            #     run: sudo apt-get install vpnc
-            # -
-            #     name: 'Connect VPN'
-            #     id: vpn-connect
-            #     run: |
-            #         sudo vpnc \
-            #             --gateway '${{ secrets.VPN_IP }}' \
-            #             --id VPNADTmp \
-            #             --secret '${{ secrets.VPN_SECRET }}' \
-            #             --username '${{ vars.VPN_USER }}' \
-            #             --password '${{ secrets.VPN_PASSWORD }}' \
-            #             --dh dh5 \
-            #             --pfs dh5;
-            # -
-            #     name: 'Test database connection'
-            #     run: docker compose run --rm --env DATABASE_URL cli bin/console doctrine:schema:update --dump-sql --complete -e prod
-            #     env:
-            #         DATABASE_URL: 'mysql://${{ vars.DATABASE_USER }}:${{ secrets.DATABASE_PASSWORD }}@${{ vars.DATABASE_HOST }}:${{ vars.DATABASE_PORT }}/modulo_frio?serverVersion=8.0.32'
-            # -
-            #     name: 'Disconnect VPN'
-            #     if: ${{ (success() || failure()) && steps.vpn-connect.conclusion == 'success' }}
-            #     run: sudo vpnc-disconnect
