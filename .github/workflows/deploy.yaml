@@ -116,15 +116,12 @@ jobs:
                         --password '${{ secrets.VPN_PASSWORD }}' \
                         --dh dh5 \
                         --pfs dh5 || echo "vpnc falló con código $?;
-                        
-                    echo "pase del comando vpnc (Attempt $((attempts + 1)) of $max_attempts)";
                 
                     if [ $? -eq 0 ]; then
                         echo "VPN connected";
 
                         break;
                     else
-                        attempts=$((attempts + 1))
                         echo "Connection attempt failed (Attempt $attempts of $max_attempts)";
 
                         sleep 5;
