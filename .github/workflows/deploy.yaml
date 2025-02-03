@@ -74,36 +74,45 @@ jobs:
                         --password '${{ secrets.VPN_PASSWORD }}' \
                         --dh dh5 \
                         --pfs dh5;
+
             -
                 name: Login to Docker Hub
                 run: |
-                    docker login '$DOCKER_REGISTRY' --username "$DOCKER_USERNAME" --password-stdin
-                    echo '${{ secrets.DOCKER_PASSWORD }}' | docker login '${{ vars.DOCKER_REGISTRY }}' --username \
-                        '${{ vars.DOCKER_USERNAME }}' --password-stdin 
+                    echo '${{ secrets.DOCKER_PASSWORD }}' | \
+                        docker login '${{ vars.DOCKER_REGISTRY }}' --username '${{ vars.DOCKER_USERNAME }}' \
+                        --password-stdin 
 
             # - 
             #     name: 'Docker image push'
             #     run: |
             #         docker push '${{ vars.DOCKER_TAG }}'
 
-            # -
-            #     name: 'Azure logout'
-            #     run: docker compose -f compose.yaml run --rm cli az logout'
-
             -
-                name: 'Azure container restore'
-                id: azure-container-restore
+                name: 'Azure login'
+                id: azure-login
                 if: ${{ 'success' == steps.vpn-connect.conclusion }}
                 run: |
                     docker compose -f compose.yaml run --rm cli bash -c "\
                         az login -u '${{ secrets.AZURE_WEB_APP_CONTAINER_USER }}' \
                             -p '${{ secrets.AZURE_WEB_APP_CONTAINER_PASSWORD }}' \
-                        && \
+                    "
+
+            -
+                name: 'Azure container restore'
+                id: azure-container-restore
+                if: ${{ 'success' == steps.azure-login.conclusion }}
+                run: |
+                    docker compose -f compose.yaml run --rm cli bash -c "\
                         az webapp restart \
                             --name '${{ vars.AZURE_WEB_APP_CONTAINERS_NAME }}' \
                             --resource-group '${{ secrets.AZURE_WEB_APP_CONTAINERS_RESOURCE_GROUP }}' \
                             --subscription '${{ secrets.AZURE_WEB_APP_CONTAINERS_SUBSCRIPTION_ID }}'
                     "
+
+            -
+                name: 'Azure logout'
+                if: ${{ 'success' == steps.azure-login.conclusion }}
+                run: docker compose -f compose.yaml run --rm cli bash -c "az logout"
 
             -
                   name: 'Disconnect VPN'
