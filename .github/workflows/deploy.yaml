@@ -37,6 +37,21 @@ jobs:
                 name: 'Build Composer dependencies'
                 run: docker compose -f ./compose.yaml run --rm cli composer install --prefer-dist --optimize-autoloader --no-interaction
 
+            - 
+                name: 'Create database certificate'
+                run: |
+                    mkdir --parents ./var/mysql
+                    echo '${{ secrets.AZURE_DATABASE_CERTIFICATE }}' > ./var/mysql/client-key.pem;
+                    chmod 0400 ./var/mysql/client-key.pem;
+
+            - 
+                name: Edit .env file
+                run: |
+                      echo "****************************************************************************"
+                      echo "Setting DATABASE_URL environment variable ..."
+                      
+                      echo 'DATABASE_URL=${{ secrets.DATABASE_DSN }}' >> .env
+
             -
                 name: 'build'
                 run: |
@@ -75,6 +90,15 @@ jobs:
                         --dh dh5 \
                         --pfs dh5;
 
+            -
+                name: 'Synchronize database'
+                run: |
+                    docker compose -f compose.yaml run --rm cli bash -c "\
+                        bin/console doctrine:schema:update --dump-sql --complete -e prod \
+                        && \
+                        bin/console doctrine:migration:migrate --no-interaction -e prod -vvv' \
+                    "
+
             # -
             #     name: Login to Docker Hub
             #     run: |
@@ -95,14 +119,7 @@ jobs:
                     docker compose -f compose.yaml run --rm cli bash -c "\
                         az login -u '${{ secrets.AZURE_WEB_APP_CONTAINER_USER }}' \
                             -p '${{ secrets.AZURE_WEB_APP_CONTAINER_PASSWORD }}' \
-                    "
-
-            -
-                name: 'Azure container restore'
-                id: azure-container-restore
-                if: ${{ 'success' == steps.azure-login.conclusion }}
-                run: |
-                    docker compose -f compose.yaml run --rm cli bash -c "\
+                        && \
                         az webapp restart \
                             --name '${{ vars.AZURE_WEB_APP_CONTAINERS_NAME }}' \
                             --resource-group '${{ secrets.AZURE_WEB_APP_CONTAINERS_RESOURCE_GROUP }}' \
@@ -110,9 +127,10 @@ jobs:
                     "
 
             -
-                name: 'Azure logout'
-                if: ${{ 'success' == steps.azure-login.conclusion }}
-                run: docker compose -f compose.yaml run --rm cli bash -c "az logout"
+                name: Reset .env file
+                run: |
+                    echo "Reset .env file ..."
+                    git checkout -- .env
 
             -
                   name: 'Disconnect VPN'
