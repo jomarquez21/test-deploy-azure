@@ -103,11 +103,6 @@ jobs:
                 id: vpn-connect
                 if: ${{ 'success' == steps.vpn-installation.conclusion}}
                 run: |
-                    set -e;
-                    echo "Connecting to Azure VPN";
-                    attempts=0;
-                    max_attempts=5;
-
                     sudo vpnc \
                         --gateway 192.100.176.95 \
                         --id VPNADTmp \
@@ -116,18 +111,9 @@ jobs:
                         --password '${{ secrets.VPN_PASSWORD }}' \
                         --dh dh5 \
                         --pfs dh5 || echo "vpnc falló con código $?;
-                
-                    if [ $? -eq 0 ]; then
-                        echo "VPN connected";
-
-                        break;
-                    else
-                        echo "Connection attempt failed";
-
-                        sleep 5;
-                    fi
 
                     echo "maybe VPN connected";
+
 
             # -
             #     name: 'Synchronize database'
