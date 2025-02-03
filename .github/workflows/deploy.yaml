@@ -110,7 +110,7 @@ jobs:
                         --username '${{ vars.VPN_USER }}' \
                         --password '${{ secrets.VPN_PASSWORD }}' \
                         --dh dh5 \
-                        --pfs dh5 || echo "vpnc falló con código $?";
+                        --pfs dh5;
 
                     echo "maybe VPN connected";
 
@@ -124,15 +124,47 @@ jobs:
             #             bin/console doctrine:migration:migrate --no-interaction -e prod -vvv
             #         "
 
-            -
+            # -
+            #     name: Login to Docker Hub
+            #     id: docker-authentication
+            #     if: ${{ 'success' == steps.vpn-connect.conclusion}}
+            #     run: |
+            #         echo '${{ secrets.DOCKER_PASSWORD }}' | \
+            #             docker login '${{ vars.DOCKER_REGISTRY }}' --username '${{ vars.DOCKER_USERNAME }}' \
+            #             --password-stdin
+            - 
                 name: Login to Docker Hub
                 id: docker-authentication
                 if: ${{ 'success' == steps.vpn-connect.conclusion}}
                 run: |
-                    echo '${{ secrets.DOCKER_PASSWORD }}' | \
-                        docker login '${{ vars.DOCKER_REGISTRY }}' --username '${{ vars.DOCKER_USERNAME }}' \
-                        --password-stdin
-
+                    echo "Intentando login en Docker Hub..."
+                    attempts=0
+                    max_attempts=5
+                    success=false
+              
+                    while [ $attempts -lt $max_attempts ]; do
+                        echo "Intento $((attempts + 1)) de $max_attempts..."
+              
+                        echo '${{ secrets.DOCKER_PASSWORD }}' | \
+                            docker login '${{ vars.DOCKER_REGISTRY }}' --username '${{ vars.DOCKER_USERNAME }}' \
+                            --password-stdin
+              
+                        # Comprobar si el login fue exitoso
+                        if [ $? -eq 0 ]; then
+                            success=true
+                            echo "Docker login exitoso.";
+                            break;
+                        else
+                            echo "Docker login falló, reintentando en 10 segundos...";
+                            attempts=$((attempts + 1));
+                            sleep 10;
+                        fi
+                    done
+              
+                    if [ "$success" = false ]; then
+                        echo "No se pudo realizar el login en Docker después de $max_attempts intentos."
+                        exit 1;
+                    fi
             # - 
             #     name: 'Docker image push'
             #     run: |
