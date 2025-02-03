@@ -90,6 +90,14 @@ jobs:
                         --dh dh5 \
                         --pfs dh5;
 
+                    # Check VPN conexion.
+                    if ip a | grep -q "tun"; then
+                        echo "VPN connected successfully";
+                    else
+                        echo "VPN connection failed" >&2;
+                        exit 1;
+                    fi
+
             # -
             #     name: 'Synchronize database'
             #     run: |
