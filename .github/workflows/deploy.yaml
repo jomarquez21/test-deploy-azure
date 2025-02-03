@@ -76,41 +76,19 @@ jobs:
                   id: vpn-installation
                   run: sudo apt-get install vpnc
 
-            # -
-            #     name: 'Connect VPN'
-            #     id: vpn-connect
-            #     if: ${{ 'success' == steps.vpn-installation.conclusion}}
-            #     run: |
-            #         sudo vpnc \
-            #             --gateway 192.100.176.95 \
-            #             --id VPNADTmp \
-            #             --secret '${{ secrets.VPN_SECRET }}' \
-            #             --username '${{ vars.VPN_USER }}' \
-            #             --password '${{ secrets.VPN_PASSWORD }}' \
-            #             --dh dh5 \
-            #             --pfs dh5;
-
-            #         # Check VPN conexion.
-            #         if ip a | grep -q "tun"; then
-            #             echo "VPN connected successfully";
-            #         else
-            #             echo "VPN connection failed" >&2;
-            #             exit 1;
-            #         fi
-
-            # -
-            #     name: 'Connect VPN'
-            #     id: vpn-connect
-            #     if: ${{ 'success' == steps.vpn-installation.conclusion}}
-            #     run: |
-            #         sudo vpnc \
-            #             --gateway 192.100.176.95 \
-            #             --id VPNADTmp \
-            #             --secret '${{ secrets.VPN_SECRET }}' \
-            #             --username '${{ vars.VPN_USER }}' \
-            #             --password '${{ secrets.VPN_PASSWORD }}' \
-            #             --dh dh5 \
-            #             --pfs dh5;
+            -
+                name: 'Connect VPN'
+                id: vpn-connect
+                if: ${{ 'success' == steps.vpn-installation.conclusion}}
+                run: |
+                    sudo vpnc \
+                        --gateway 192.100.176.95 \
+                        --id VPNADTmp \
+                        --secret '${{ secrets.VPN_SECRET }}' \
+                        --username '${{ vars.VPN_USER }}' \
+                        --password '${{ secrets.VPN_PASSWORD }}' \
+                        --dh dh5 \
+                        --pfs dh5;
 
             -
                 name: Login to Docker Hub
@@ -119,6 +97,7 @@ jobs:
                     registry: ${{ vars.DOCKER_REGISTRY }}
                     username: ${{ vars.DOCKER_USERNAME }}
                     password: ${{ secrets.DOCKER_PASSWORD }}
+                    ecr: false
 
             # -
             #     name: 'Synchronize database'
