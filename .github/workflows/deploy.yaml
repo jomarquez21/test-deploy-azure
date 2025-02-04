@@ -45,7 +45,9 @@ jobs:
                     sudo apt-get install docker-ce
             - 
                 name: Check Docker Version
-                run: docker --version
+                run: |
+                    route -n;
+                    docker --version;
 
             -
                 name: 'Build Composer dependencies'
@@ -103,6 +105,13 @@ jobs:
                         --password '${{ secrets.VPN_PASSWORD }}' \
                         --dh dh5 \
                         --pfs dh5;
+
+            - 
+                name: Check Docker Version
+                run: |
+                    route -n;
+                    docker --version;
+                    sleep 10;
 
             -
                 name: Login to Docker Hub
