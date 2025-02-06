@@ -44,6 +44,18 @@ jobs:
                 id: vpn-installation
                 run: sudo apt-get install vpnc
 
+
+            - 
+                name: Check Docker Version
+                run: docker --version
+            - 
+                name: Install Latest Docker
+                run: |
+                    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+                    sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu  $(lsb_release -cs)  stable"
+                    sudo apt-get update
+                    sudo apt-get install docker-ce
+
             -
                 name: 'Connect VPN'
                 id: vpn-connect
@@ -58,16 +70,6 @@ jobs:
                         --dh dh5 \
                         --pfs dh5;    
 
-            - 
-                name: Check Docker Version
-                run: docker --version
-            - 
-                name: Install Latest Docker
-                run: |
-                    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-                    sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu  $(lsb_release -cs)  stable"
-                    sudo apt-get update
-                    sudo apt-get install docker-ce
             -
                 name: 'Build Composer dependencies'
                 run: docker compose -f ./compose.yaml run --rm cli composer install --prefer-dist --optimize-autoloader --no-interaction
