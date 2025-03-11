@@ -9,66 +9,16 @@ on:
                 type: string
 
 jobs:
-    # build-docker:
-    #     name: 'Build Docker image'
-    #     uses: './.github/workflows/docker-build.yaml'
-    #     secrets: inherit
-
     qa-json-cs:
         name: 'QA - Check syntax in JSON files'
-        # needs:
-        #     - build-docker
         runs-on: ubuntu-latest
         timeout-minutes: 5
         permissions:
             contents: read
         steps:
-            # -
-            #     name: 'Load environment variables'
-            #     run: |
-            #         echo 'COMPOSE_PROJECT_NAME=${{ needs.build-docker.outputs.project-name }}' >> "${GITHUB_ENV}"
-            #         echo 'COMPOSE_FILE=${{ needs.build-docker.outputs.compose-file }}' >> "${GITHUB_ENV}"
             -
                 name: 'Checkout'
                 uses: 'actions/checkout@v4'
-            # -
-            #     name: 'Download Docker artifacts'
-            #     uses: 'actions/download-artifact@v4'
-            #     with:
-            #         name: env-docker
-            #         run-id: ${{ github.event.workflow_run.id }}
-            #         path: .docker/
-            # -
-            #     name: 'Cache Docker images'
-            #     uses: 'ScribeMD/docker-cache@0.5.0'
-            #     with:
-            #         key: '${{ needs.build-docker.outputs.cache-key-docker }}'
-            #         read-only: true
-            # -
-            #     name: 'Check syntax in JSON files ...'
-            #     run: |
-            #         EXCLUDE_ARGS='';
-
-            #         ORIGINAL_IFS=${IFS};
-            #         IFS=','
-
-            #         if [ -n "${{ inputs.exclude-patterns }}" ]; then
-            #             read -ra PATTERNS <<< "${{ inputs.exclude-patterns }}"
-
-            #             for pattern in "${PATTERNS[@]}"; do
-            #                 trimmed_pattern="$(echo -e "${pattern}" | sed 's/^ *//;s/ *$//')"
-            #                 if [[ "$trimmed_pattern" == */ ]]; then
-            #                     EXCLUDE_ARGS+=" -not -path \"./$trimmed_pattern*\""
-            #                 else
-            #                     EXCLUDE_ARGS+=" ! -name \"$trimmed_pattern\""
-            #                 fi
-            #             done
-            #         fi
-
-            #         IFS=${ORIGINAL_IFS};
-
-            #         echo "🔍 Buscando archivos JSON..."
-            #         find . -type f -name '*.json' ${EXCLUDE_ARGS} | xargs ls -l
             -
                 name: 'Check syntax in JSON files ...'
                 run: |
@@ -95,4 +45,4 @@ jobs:
                     IFS=${ORIGINAL_IFS};
 
                     echo "find . -type f -name '*.json' ${EXCLUDE_ARGS}"
-                    find . -type f -name '*.json' ${EXCLUDE_ARGS}
+                    eval "find . -type f -name '*.json' ${EXCLUDE_ARGS}"
