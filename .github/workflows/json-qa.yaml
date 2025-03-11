@@ -82,14 +82,17 @@ jobs:
 
                         for pattern in "${PATTERNS[@]}"; do
                             trimmed_pattern="$(echo -e "${pattern}" | sed 's/^ *//;s/ *$//')"
-                            
-                            EXCLUDE_ARGS+=" -not -path \"$trimmed_pattern\""
-                            echo "IF => EXCLUDE_ARGS=${EXCLUDE_ARGS}"
-                        
+                            if [[ "$trimmed_pattern" == */ ]]; then
+                                EXCLUDE_ARGS+=" -not -path \"./$trimmed_pattern*\""
+                                echo "IF => EXCLUDE_ARGS=${EXCLUDE_ARGS}"
+                            else
+                                EXCLUDE_ARGS+=" -not -name \"${trimmed_pattern}\""
+                                echo "ELSE => EXCLUDE_ARGS=${EXCLUDE_ARGS}"
+                            fi
                         done
                     fi
 
                     IFS=${ORIGINAL_IFS};
-                    ls -la
+
                     echo "find . -type f -name '*.json' ${EXCLUDE_ARGS}"
                     find . -type f -name '*.json' ${EXCLUDE_ARGS}
