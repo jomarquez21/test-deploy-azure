@@ -82,13 +82,10 @@ jobs:
 
                         for pattern in "${PATTERNS[@]}"; do
                             trimmed_pattern="$(echo -e "${pattern}" | sed 's/^ *//;s/ *$//')"
-                            if [[ "$trimmed_pattern" == */ ]]; then
-                                EXCLUDE_ARGS+=" -not -path \"./$trimmed_pattern*\""
-                                echo "IF => EXCLUDE_ARGS=${EXCLUDE_ARGS}"
-                            else
-                                EXCLUDE_ARGS+=" ! -iname \"${trimmed_pattern}\""
-                                echo "ELSE => EXCLUDE_ARGS=${EXCLUDE_ARGS}"
-                            fi
+                            
+                            EXCLUDE_ARGS+=" -not -path \"$trimmed_pattern\""
+                            echo "IF => EXCLUDE_ARGS=${EXCLUDE_ARGS}"
+                        
                         done
                     fi
 
