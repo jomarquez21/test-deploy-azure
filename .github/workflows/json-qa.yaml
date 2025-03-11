@@ -90,6 +90,6 @@ jobs:
                     fi
 
                     IFS=${ORIGINAL_IFS};
-
+                    ls -la
                     echo "find . -type f -name '*.json' ${EXCLUDE_ARGS}"
                     find . -type f -name '*.json' ${EXCLUDE_ARGS}
