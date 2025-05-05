@@ -115,7 +115,6 @@ jobs:
                         --dh dh5 \
                         --pfs dh5;   
                     sleep 10  # Esperar conexión
-                    ping -c 4 bmecvmfcorcd04.azurecr.io || (echo "VPN connection failed"; exit 1)
 
             # -
             #     name: Login to Docker Hub
