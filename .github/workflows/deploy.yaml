@@ -57,20 +57,6 @@ jobs:
                     sudo apt-get install docker-ce
 
             -
-                name: 'Connect VPN'
-                id: vpn-connect
-                if: ${{ 'success' == steps.vpn-installation.conclusion}}
-                run: |
-                    sudo vpnc \
-                        --gateway 192.100.176.95 \
-                        --id VPNADTmp \
-                        --secret '${{ secrets.VPN_SECRET }}' \
-                        --username '${{ vars.VPN_USER }}' \
-                        --password '${{ secrets.VPN_PASSWORD }}' \
-                        --dh dh5 \
-                        --pfs dh5;    
-
-            -
                 name: 'Build Composer dependencies'
                 run: docker compose -f ./compose.yaml run --rm cli composer install --prefer-dist --optimize-autoloader --no-interaction
 
@@ -114,6 +100,20 @@ jobs:
                     route -n;
                     docker --version;
                     sleep 10;
+            
+            -
+                name: 'Connect VPN'
+                id: vpn-connect
+                if: ${{ 'success' == steps.vpn-installation.conclusion}}
+                run: |
+                    sudo vpnc \
+                        --gateway 192.100.176.95 \
+                        --id VPNADTmp \
+                        --secret '${{ secrets.VPN_SECRET }}' \
+                        --username '${{ vars.VPN_USER }}' \
+                        --password '${{ secrets.VPN_PASSWORD }}' \
+                        --dh dh5 \
+                        --pfs dh5;   
 
             -
                 name: Login to Docker Hub
