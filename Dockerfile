@@ -4,12 +4,18 @@ FROM public.ecr.aws/docker/library/php:8.3.7-apache-bookworm AS base
 
 COPY --from=public.ecr.aws/docker/library/composer:2.8.2 /usr/bin/composer /usr/bin/composer
 
+COPY --from=node:21.7 /usr/local/bin/node /usr/local/bin/node
+COPY --from=node:21.7 /usr/local/lib/node_modules /usr/local/lib/node_modules
+
 # Instala Composer y dependencias de Symfony
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
     git \
-    libicu-dev 
+    libicu-dev \
+    && ln -sf /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm \
+    && npm install -g \
+    jsonlint@^1.6 
 
 # Instala Symfony CLI
 # RUN curl -sS https://get.symfony.com/cli/installer | bash \

@@ -70,4 +70,5 @@ jobs:
                     fi
 
                     echo "The command: ${COMMAND}"
+                    COMMAND+=' | xargs -I {} jsonlint "{}"'
                     docker compose run --user $(id -u):$(id -g) --rm --quiet cli sh -c "${COMMAND}";
