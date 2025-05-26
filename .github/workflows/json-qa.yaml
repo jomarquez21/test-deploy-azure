@@ -46,6 +46,7 @@ jobs:
 
             #         echo "find . -type f -name '*.json' ${EXCLUDE_ARGS}"
             #         eval "find . -type f -name '*.json' ${EXCLUDE_ARGS}"
+            # COMMAND+=' | xargs -I {} jsonlint "{}"'
 
             -
                 name: 'Check syntax in JSON files ...'
@@ -68,6 +69,5 @@ jobs:
                         IFS=${ORIGINAL_IFS}
                     fi
 
-                    
                     echo "The command: ${COMMAND}"
-                    docker compose run --rm --quiet cli sh -c "${COMMAND}";
+                    docker compose -f ./compose.yaml run --rm --quiet cli sh -c "${COMMAND}";
