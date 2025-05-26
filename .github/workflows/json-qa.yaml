@@ -70,4 +70,4 @@ jobs:
                     fi
 
                     echo "The command: ${COMMAND}"
-                    docker compose run --rm --quiet cli sh -c "${COMMAND}";
+                    docker compose run --user $(id -u):$(id -g) --rm --quiet cli sh -c "${COMMAND}";
