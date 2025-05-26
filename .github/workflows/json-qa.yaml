@@ -59,7 +59,7 @@ jobs:
 
                         for PATTERN in "${PATTERNS[@]}"; do
                             if [[ ! "${PATTERN}" =~ ^:! ]]; then
-                                echo 'Invalid exclusion pattern "${PATTERN}". Must start with ":!".';
+                                echo "Invalid exclusion pattern \"${PATTERN}\". Must start with \":!\".";
                                 exit 1;
                             fi
 
