@@ -3,7 +3,7 @@ name: 'QA - JSON'
 on:
     workflow_dispatch:
         inputs:
-            exclude-patterns:
+            exclude-pathspec:
                 description: 'List of exclusion patterns using pathspec syntax, separated by commas (e.g., "node_modules/, vendor/, *.json")'
                 required: false
                 type: string
@@ -19,30 +19,55 @@ jobs:
             -
                 name: 'Checkout'
                 uses: 'actions/checkout@v4'
+            # -
+            #     name: 'Check syntax in JSON files ...'
+            #     run: |
+            #         EXCLUDE_ARGS='';
+
+            #         ORIGINAL_IFS=${IFS};
+            #         IFS=','
+
+            #         if [ -n "${{ inputs.exclude-pathspec }}" ]; then
+            #             read -ra PATTERNS <<< "${{ inputs.exclude-pathspec }}"
+
+            #             for pattern in "${PATTERNS[@]}"; do
+            #                 trimmed_pattern="$(echo -e "${pattern}" | sed 's/^ *//;s/ *$//')"
+            #                 if [[ "$trimmed_pattern" == */ ]]; then
+            #                     EXCLUDE_ARGS+=" -not -path \"./$trimmed_pattern*\""
+            #                     echo "IF => EXCLUDE_ARGS=${EXCLUDE_ARGS}"
+            #                 else
+            #                     EXCLUDE_ARGS+=" -not -name \"${trimmed_pattern}\""
+            #                     echo "ELSE => EXCLUDE_ARGS=${EXCLUDE_ARGS}"
+            #                 fi
+            #             done
+            #         fi
+
+            #         IFS=${ORIGINAL_IFS};
+
+            #         echo "find . -type f -name '*.json' ${EXCLUDE_ARGS}"
+            #         eval "find . -type f -name '*.json' ${EXCLUDE_ARGS}"
+
             -
                 name: 'Check syntax in JSON files ...'
                 run: |
-                    EXCLUDE_ARGS='';
+                    COMMAND='git ls-files -- "*.json"';
+                    
+                    if [ -n "${{ inputs.exclude-pathspec }}" ]; then
+                        ORIGINAL_IFS=${IFS}
+                        IFS=','
+                        read -ra PATTERNS <<< "${{ inputs.exclude-pathspec }}"
 
-                    ORIGINAL_IFS=${IFS};
-                    IFS=','
-
-                    if [ -n "${{ inputs.exclude-patterns }}" ]; then
-                        read -ra PATTERNS <<< "${{ inputs.exclude-patterns }}"
-
-                        for pattern in "${PATTERNS[@]}"; do
-                            trimmed_pattern="$(echo -e "${pattern}" | sed 's/^ *//;s/ *$//')"
-                            if [[ "$trimmed_pattern" == */ ]]; then
-                                EXCLUDE_ARGS+=" -not -path \"./$trimmed_pattern*\""
-                                echo "IF => EXCLUDE_ARGS=${EXCLUDE_ARGS}"
-                            else
-                                EXCLUDE_ARGS+=" -not -name \"${trimmed_pattern}\""
-                                echo "ELSE => EXCLUDE_ARGS=${EXCLUDE_ARGS}"
+                        for PATTERN in "${PATTERNS[@]}"; do
+                            if [[ ! "${PATTERN}" =~ ^:! ]]; then
+                                echo 'Invalid exclusion pattern "${PATTERN}". Must start with ":!".';
+                                exit 1;
                             fi
+
+                            COMMAND+=" -- ${PATTERN}"
                         done
+                        IFS=${ORIGINAL_IFS}
                     fi
 
-                    IFS=${ORIGINAL_IFS};
-
-                    echo "find . -type f -name '*.json' ${EXCLUDE_ARGS}"
-                    eval "find . -type f -name '*.json' ${EXCLUDE_ARGS}"
+                    COMMAND+=' | xargs -I {} jsonlint "{}"'
+                    echo "The command: ${COMMAND}"
+                    docker compose run --rm --quiet cli sh -c "${COMMAND}";
