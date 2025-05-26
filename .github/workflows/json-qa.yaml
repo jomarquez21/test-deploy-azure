@@ -63,7 +63,7 @@ jobs:
                                 exit 1;
                             fi
 
-                            COMMAND+=" -- ${PATTERN}"
+                            COMMAND+=" -- \"${PATTERN}\""
                         done
                         IFS=${ORIGINAL_IFS}
                     fi
