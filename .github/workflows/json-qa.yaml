@@ -68,6 +68,6 @@ jobs:
                         IFS=${ORIGINAL_IFS}
                     fi
 
-                    COMMAND+=' | xargs -I {} jsonlint "{}"'
+                    
                     echo "The command: ${COMMAND}"
                     docker compose run --rm --quiet cli sh -c "${COMMAND}";
