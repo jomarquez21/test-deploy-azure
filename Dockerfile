@@ -8,6 +8,7 @@ COPY --from=public.ecr.aws/docker/library/composer:2.8.2 /usr/bin/composer /usr/
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
+    git \
     libicu-dev 
 
 # Instala Symfony CLI
@@ -16,7 +17,7 @@ RUN apt-get update && apt-get install -y \
 
 # Install "azure-cli" package.
 # See: https://learn.microsoft.com/en-us/cli/azure/install-azure-cli-linux?pivots=apt#option-1-install-with-one-command.
-RUN curl -sL https://raw.githubusercontent.com/Azure/azure-cli/azure-cli-2.52.0/scripts/release/debian/deb_install.sh | bash
+# RUN curl -sL https://raw.githubusercontent.com/Azure/azure-cli/azure-cli-2.52.0/scripts/release/debian/deb_install.sh | bash
 
 # Reset default "/bin/sh" flags.
 SHELL ["/bin/sh", "-c"]
